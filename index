@@ -336,7 +336,7 @@
 
 <script>
     // ==========================================
-    // 1. FIREBASE CONFIGURATION
+    // FIREBASE CONFIGURATION
     // ==========================================
     const firebaseConfig = {
         apiKey: "AIzaSyAuFGbtry9REYNNtdSCM-HuB0jTvGOXBzA",
