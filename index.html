@@ -323,6 +323,15 @@
     </div>
 </div>
 
+<div id="modal-kicked" class="fixed inset-0 z-[999] hidden flex-col items-center justify-center bg-slate-900/95 backdrop-blur-md p-4">
+    <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg p-10 flex flex-col items-center text-center transform scale-bounce">
+        <div class="text-7xl mb-6">🚫</div>
+        <h2 class="text-4xl font-black text-rose-600 mb-4 tracking-tight">AKSES TERPUTUS</h2>
+        <p id="kicked-reason" class="text-slate-600 font-bold text-lg mb-8">Akun Anda sedang digunakan di perangkat lain. Gunakan lisensi yang resmi.</p>
+        <button onclick="playSound('click'); location.reload();" class="w-full btn bg-rose-500 hover:bg-rose-600 text-white font-black text-xl py-5 rounded-2xl shadow-[0_8px_30px_rgba(244,63,94,0.4)] transition-all">KEMBALI KE LAYAR UTAMA</button>
+    </div>
+</div>
+
 <div id="modal-special-effect" class="fixed inset-0 z-[60] hidden flex-col items-center justify-center bg-slate-900/90 backdrop-blur-sm">
     <div id="se-content" class="flex flex-col items-center transform scale-0 transition-transform duration-500">
         <div id="se-icon" class="text-9xl mb-4">💣</div>
@@ -332,124 +341,6 @@
         </div>
     </div>
 </div>
-
-<main id="screen-setup" class="app-screen bg-pastel-gradient p-4 md:p-10 text-slate-800 overflow-y-auto">
-    <div class="max-w-3xl mx-auto w-full">
-        <div class="flex justify-between items-center mb-8 glass-card p-5 rounded-[2rem]">
-            <h1 class="text-2xl font-black text-indigo-800 pl-2">🕹️ SETUP PERMAINAN</h1>
-            <button onclick="playSound('click'); goAdmin('dash')" class="btn bg-white hover:bg-slate-50 text-slate-600 font-bold px-5 py-2.5 rounded-xl text-sm border border-slate-100 shadow-sm">◀ Batal</button>
-        </div>
-
-        <div class="bg-white rounded-[2rem] p-8 mb-6 shadow-sm border border-slate-100">
-            <h2 class="font-bold text-slate-500 text-sm tracking-wide uppercase mb-4">1. Filter & Pilih Paket Kuis</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-                <select id="sg-filter-jenjang" onchange="onFilterJenjangChange('sg')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Jenjang</option><option value="SD">SD</option><option value="SMP">SMP</option><option value="SMA">SMA</option><option value="Umum">Umum</option></select>
-                <select id="sg-filter-class" onchange="onFilterClassChange('sg')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Kelas</option></select>
-                <select id="sg-filter-subject" onchange="applyQuizFilter('sg')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Mapel</option></select>
-            </div>
-            <select id="sg-quiz" class="w-full bg-indigo-50 border border-indigo-200 focus:border-indigo-400 p-4 rounded-xl outline-none font-black text-indigo-700 text-xl transition-colors"><option value="">-- Pilih Paket Kuis --</option></select>
-        </div>
-
-        <div class="bg-white rounded-[2rem] p-8 mb-10 shadow-sm border border-slate-100">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="font-bold text-slate-500 text-sm tracking-wide uppercase">2. Pengaturan Tim</h2>
-                <div class="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
-                    <button onclick="playSound('click'); changeTeamCount(-1)" class="w-10 h-10 rounded-lg bg-white shadow-sm font-black text-slate-600 hover:text-indigo-600">-</button>
-                    <span id="txt-team-count" class="w-10 text-center font-black text-lg">4</span>
-                    <button onclick="playSound('click'); changeTeamCount(1)" class="w-10 h-10 rounded-lg bg-white shadow-sm font-black text-slate-600 hover:text-indigo-600">+</button>
-                </div>
-            </div>
-            <div id="team-inputs-container" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-        </div>
-
-        <button onclick="playSound('click'); startGameSession()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold py-5 rounded-2xl shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:shadow-[0_10px_40px_rgba(79,70,229,0.4)] transition-all">MULAI GAME SEKARANG</button>
-    </div>
-</main>
-
-<main id="screen-board" class="app-screen bg-[#f8fafc] p-2 md:p-4 h-[100dvh] flex-col overflow-hidden">
-    <div class="flex justify-between items-center bg-white p-3 rounded-2xl mb-3 shadow-sm border border-slate-100 shrink-0 gap-2">
-        <div class="flex items-center gap-3">
-            <div class="bg-indigo-50 px-6 py-2 rounded-xl flex flex-col items-center justify-center min-w-[180px]">
-                <span class="text-[10px] text-indigo-400 font-bold uppercase mb-0.5">🎯 GILIRAN MEMILIH</span>
-                <span id="header-active-team" class="text-indigo-900 font-black text-xl truncate">TIM</span>
-            </div>
-        </div>
-        
-        <div class="flex items-center gap-2">
-            <button onclick="playSound('click'); forceFinishGame()" class="btn bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-5 py-3 rounded-xl text-xs transition-colors">🏁 AKHIRI PAKSA</button>
-        </div>
-    </div>
-
-    <div class="flex-1 bg-white rounded-[2rem] border border-slate-100 p-3 md:p-6 shadow-sm flex flex-col justify-center overflow-auto min-h-0 relative">
-        <div id="jeopardy-grid" class="jeopardy-grid w-full h-full pb-2"></div>
-    </div>
-    
-    <div id="board-teams" class="mt-3 grid gap-3 shrink-0" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));"></div>
-</main>
-
-<div id="modal-edit-score" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
-    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 relative border border-slate-100 mx-auto">
-        <button onclick="playSound('click'); closeModal('modal-edit-score')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl transition-colors">&times;</button>
-        <h2 class="text-2xl font-black text-slate-800 mb-2">✏️ Edit Skor Manual</h2>
-        <p id="es-team-name" class="text-slate-500 font-bold mb-6">Nama Tim</p>
-        <input type="hidden" id="es-team-id">
-        <input type="number" id="es-score-val" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 text-center text-4xl font-black p-4 rounded-xl outline-none mb-6 transition-colors">
-        <button onclick="playSound('click'); saveTeamScore()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-md transition-all">SIMPAN SKOR</button>
-    </div>
-</div>
-
-<div id="modal-question" class="fixed inset-0 z-40 hidden flex items-center justify-center modal-overlay p-4">
-    <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-5xl w-full flex flex-col min-h-[60vh] max-h-[95vh] overflow-hidden relative mx-auto">
-        <div id="q-special-banner" class="hidden bg-gradient-to-r from-orange-400 to-amber-400 text-white font-black text-center py-2 uppercase tracking-widest text-sm animate-pulse shadow-sm">🔥 KARTU SPESIAL 🔥</div>
-        
-        <div class="flex justify-between items-center bg-slate-50 p-6 border-b border-slate-100">
-            <div id="q-modal-category" class="text-slate-600 font-black text-xl uppercase tracking-wider bg-white px-5 py-2 rounded-xl shadow-sm border border-slate-100">KATEGORI</div>
-            <div id="q-modal-score" class="text-xl font-black text-indigo-600 bg-indigo-50 px-5 py-2 rounded-xl">10 PTS</div>
-        </div>
-
-        <div class="flex-1 w-full overflow-y-auto p-6 md:p-12 bg-white flex flex-col items-center justify-center relative">
-            <h2 id="q-modal-text" class="text-slate-800 font-black text-center text-3xl md:text-4xl leading-relaxed">Pertanyaan?</h2>
-            
-            <div id="q-ans-box" class="hidden flex-col items-center w-full max-w-4xl bg-teal-50 p-8 rounded-[2rem] mt-10 shadow-inner">
-                <div class="text-teal-600 font-bold text-sm uppercase tracking-widest mb-2">JAWABAN BENAR</div>
-                <h2 id="q-modal-answer" class="text-teal-900 font-black text-center text-3xl">Jawaban</h2>
-            </div>
-        </div>
-
-        <div class="bg-slate-50 p-6 border-t border-slate-100 flex flex-col gap-5">
-            <div id="q-phase-select" class="w-full flex flex-col items-center">
-                <div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-4">🔔 Tim Mana Yang Menjawab?</div>
-                <div id="q-buzzer-container" class="flex flex-wrap justify-center gap-3 w-full max-w-3xl"></div>
-            </div>
-
-            <div id="q-phase-validate" class="hidden w-full flex-col items-center bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 max-w-3xl mx-auto">
-                <div id="q-answering-team" class="text-2xl font-black text-slate-800 mb-6">TIM</div>
-                <div class="flex w-full gap-4">
-                    <button onclick="processAnswer(false)" class="btn flex-1 py-4 bg-rose-50 hover:bg-rose-100 text-rose-600 font-black text-xl rounded-xl transition-colors">❌ SALAH</button>
-                    <button onclick="processAnswer(true)" class="btn flex-1 py-4 bg-teal-500 hover:bg-teal-600 text-white font-black text-xl rounded-xl shadow-md transition-all">✅ BENAR</button>
-                </div>
-            </div>
-
-            <div id="q-phase-finished" class="hidden flex-col items-center w-full">
-                <button onclick="playSound('click'); returnToBoard()" class="btn px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-lg shadow-md transition-all">KEMBALI KE PAPAN GRID</button>
-            </div>
-            
-            <div class="flex justify-between w-full mt-2">
-                <button onclick="playSound('click'); closeAndDiscardQuestion()" class="btn text-rose-300 hover:text-rose-500 text-xs font-bold transition-colors">Lewati & Hanguskan Soal</button>
-                <button onclick="playSound('click'); toggleAnswerReveal()" id="btn-toggle-ans" class="btn text-slate-400 hover:text-slate-600 text-sm font-bold transition-colors">👀 Tampilkan Jawaban</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<main id="screen-result" class="app-screen bg-pastel-gradient items-center justify-center p-6 text-center">
-    <div class="glass-card p-10 rounded-[3rem] w-full max-w-2xl flex flex-col items-center">
-        <div class="text-7xl mb-4 anim-bounce drop-shadow-md">🏆</div>
-        <h1 class="text-4xl font-black text-indigo-800 mb-8 tracking-wide">HASIL AKHIR</h1>
-        <div id="podium-list" class="w-full flex flex-col gap-3 mb-10 overflow-hidden px-2 py-4"></div>
-        <button onclick="playSound('click'); showScreen('screen-admin'); goAdmin('dash');" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-4 px-10 rounded-xl shadow-[0_8px_30px_rgba(79,70,229,0.3)] transition-all">🏠 KEMBALI KE DASHBOARD</button>
-    </div>
-</main>
 
 <script>
     // ==========================================
@@ -466,9 +357,6 @@
     function playSound(type) { try { sounds[type].currentTime = 0; sounds[type].play().catch(e=>console.log("Audio prevented:", e)); } catch(e){} }
 
     // ==========================================
-    // LOGIKA FIREBASE & STATE
-    // ==========================================
-  // ==========================================
     // LOGIKA FIREBASE, STATE & SESSION SECURITY
     // ==========================================
     const firebaseConfig = {
@@ -509,13 +397,9 @@
             const doc = snap.docs[0]; const data = doc.data();
             if(data.status !== 'ACTIVE') { showToast("Lisensi Tidak Aktif!", "error"); return; }
             
-            // 1. Buat ID Sesi Unik untuk login ini
             const newSessionId = 'SESS-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-            
-            // 2. Update sesi di database (Ini akan memicu 'tendangan' di perangkat lain)
             await db.collection('licenses').doc(doc.id).update({ activeSession: newSessionId });
             
-            // 3. Simpan data user beserta Session ID di browser
             state.user = { licenseId: doc.id, customerName: data.customerName, plan: data.plan, sessionId: newSessionId };
             sessionStorage.setItem('j_user', JSON.stringify(state.user));
             
@@ -526,27 +410,28 @@
     }
 
     function startSessionListener(licenseId, mySessionId) {
-        // Listener Real-time yang memantau dokumen lisensi
-        if(sessionListener) sessionListener(); // Bersihkan listener lama jika ada
+        if(sessionListener) sessionListener(); 
         
         sessionListener = db.collection('licenses').doc(licenseId).onSnapshot(doc => {
             if(doc.exists) {
                 const data = doc.data();
-                // Jika activeSession di database berbeda dengan sessionId di browser ini
                 if(data.activeSession && data.activeSession !== mySessionId) {
-                    forceLogout("⚠️ Akses Terputus! Akun Anda baru saja digunakan untuk masuk di perangkat lain.");
+                    forceLogout("Akun Anda sedang digunakan di perangkat lain. Silakan gunakan lisensi yang resmi untuk menghindari gangguan.");
                 } else if (data.status !== 'ACTIVE') {
-                    forceLogout("⚠️ Lisensi dinonaktifkan oleh Admin.");
+                    forceLogout("Lisensi dinonaktifkan oleh Admin. Silakan hubungi layanan pelanggan.");
                 }
             }
         });
     }
 
     function forceLogout(reasonMsg) {
-        if(sessionListener) sessionListener(); // Matikan listener
+        if(sessionListener) sessionListener(); 
         sessionStorage.removeItem('j_user');
-        alert(reasonMsg); // Gunakan alert bawaan agar menahan layar sampai diklik OK
-        location.reload();
+        
+        document.getElementById('kicked-reason').innerText = reasonMsg;
+        document.getElementById('modal-kicked').classList.remove('hidden');
+        document.getElementById('modal-kicked').classList.add('flex');
+        playSound('wrong'); 
     }
 
     function logout() { 
@@ -559,15 +444,40 @@
         const u = sessionStorage.getItem('j_user');
         if(u) { 
             state.user = JSON.parse(u); 
-            // Aktifkan pelindung sesi segera setelah halaman dimuat ulang
             startSessionListener(state.user.licenseId, state.user.sessionId);
             fetchHierarchyData(); goAdmin('dash'); 
         }
     });
-    // --- AKHIR NETFLIX-STYLE SESSION SECURITY ---
 
     // ==========================================
-    // MENU CRUD & FILTER CASCADING TERBARU
+    // PENGAMBILAN DATA MASTER
+    // ==========================================
+    async function fetchHierarchyData() {
+        if(!state.user) return;
+        const clSnap = await db.collection('classes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
+        state.classes = clSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const sjSnap = await db.collection('subjects').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
+        state.subjects = sjSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const qzSnap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
+        state.quizzes = qzSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+
+    function goAdmin(subId) {
+        if(!state.user) { showScreen('screen-cover'); return; }
+        document.getElementById('admin-user-name').innerText = state.user.customerName;
+        document.getElementById('admin-user-plan').innerText = state.user.plan || 'MEMBER';
+        showScreen('screen-admin');
+        document.querySelectorAll('[id^="admin-sub-"]').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById(`admin-sub-${subId}`)?.classList.remove('hidden');
+        document.getElementById(`nav-${subId}`)?.classList.add('active');
+        if(subId === 'dash') loadDashboard(); if(subId === 'class') loadClasses();
+        if(subId === 'subject') loadSubjects(); if(subId === 'quiz') loadQuizzes();
+        if(subId === 'bank' || subId === 'import') populateQuizSelects();
+    }
+
+    // ==========================================
+    // MENU CRUD & FILTER CASCADING
     // ==========================================
     function onFilterJenjangChange(prefix) {
         const j = document.getElementById(`${prefix}-filter-jenjang`).value;
@@ -605,19 +515,17 @@
         qSel.innerHTML = '<option value="">-- Pilih Paket Soal --</option>';
         filtered.forEach(q => qSel.innerHTML += `<option value="${q.id}">${q.name}</option>`);
 
-        if(prefix === 'flt-bank') loadQuestions(); // Khusus bank soal langsung load
+        if(prefix === 'flt-bank') loadQuestions(); 
     }
 
     async function populateQuizSelects() {
         if(!state.quizzes || state.quizzes.length === 0) await fetchHierarchyData();
-        // Paksa cascade berjalan di semua menu yang ada filternos
         ['flt-bank', 'imp', 'sg', 'eq'].forEach(prefix => {
             const jSel = document.getElementById(`${prefix}-filter-jenjang`);
             if(jSel) { jSel.value = ""; onFilterJenjangChange(prefix); }
         });
     }
 
-    // Modal Form Functions Helper
     function updateClassDropdown(jId, cId) {
         const j = document.getElementById(jId).value; const sel = document.getElementById(cId);
         sel.innerHTML = '<option value="">-- Pilih Kelas --</option>';
@@ -629,7 +537,6 @@
         state.subjects.filter(x => x.classId === cVal).forEach(s => sel.innerHTML += `<option value="${s.id}">${s.name}</option>`);
     }
 
-    // Dashboard
     async function loadDashboard() {
         try {
             const qzSnap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
@@ -647,7 +554,6 @@
         } catch(e) { showToast(e.message, "error"); }
     }
 
-    // Kelas
     async function loadClasses() {
         await fetchHierarchyData(); const cnt = { SD: 0, SMP: 0, SMA: 0, Umum: 0 };
         const container = document.getElementById('class-list-container'); container.innerHTML = '';
@@ -667,7 +573,6 @@
     }
     async function deleteClass(id) { if(confirm("Hapus kelas ini?")) { await db.collection('classes').doc(id).delete(); loadClasses(); } }
     
-    // Mapel
     async function loadSubjects() {
         await fetchHierarchyData(); const container = document.getElementById('subject-list-container'); container.innerHTML = '';
         if(state.subjects.length === 0) { container.innerHTML = '<p class="text-slate-400 col-span-full">Belum ada data mapel.</p>'; return; }
@@ -685,12 +590,11 @@
     }
     async function deleteSubject(id) { if(confirm("Hapus mapel ini?")) { await db.collection('subjects').doc(id).delete(); loadSubjects(); } }
 
-    // Quizzes (Paket)
     async function loadQuizzes() {
         const c = document.getElementById('quiz-list-container'); c.innerHTML = '<p class="text-slate-400 font-bold col-span-full">Memuat...</p>';
         try {
             const snap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get(); c.innerHTML = '';
-            state.quizzes = snap.docs.map(d => ({ id: d.id, ...d.data() })); // Cache untuk filter
+            state.quizzes = snap.docs.map(d => ({ id: d.id, ...d.data() })); 
             if(snap.empty) { c.innerHTML = '<p class="text-slate-400 font-bold col-span-full">Belum ada paket.</p>'; return; }
             state.quizzes.forEach(q => {
                 const cls = state.classes.find(x => x.id === q.classId)?.name || 'Umum'; const subj = state.subjects.find(x => x.id === q.subjectId)?.name || 'Bebas';
@@ -706,7 +610,6 @@
     }
     async function deleteQuiz(id) { if(confirm("Hapus paket soal ini beserta seluruh isinya?")) { await db.collection('quizzes').doc(id).delete(); showToast("Paket dihapus", "info"); loadQuizzes(); } }
 
-    // Bank Soal
     async function loadQuestions() {
         const quizId = document.getElementById('flt-bank-quiz').value;
         const tbody = document.getElementById('questions-table-body');
@@ -749,6 +652,17 @@
     function editQuestion(id) {
         const q = state.loadedQuestions[id]; if(!q) return;
         document.getElementById('eq-id').value = id;
+        document.getElementById('eq-quiz').value = q.quizId;
+        
+        // Auto-select filter saat edit agar rapi
+        const paket = state.quizzes.find(x => x.id === q.quizId);
+        if(paket) {
+            document.getElementById('eq-filter-jenjang').value = paket.jenjang || ''; onFilterJenjangChange('eq');
+            document.getElementById('eq-filter-class').value = paket.classId || ''; onFilterClassChange('eq');
+            document.getElementById('eq-filter-subject').value = paket.subjectId || ''; applyQuizFilter('eq');
+            document.getElementById('eq-quiz').value = q.quizId;
+        }
+
         document.getElementById('eq-cat').value = q.cat; document.getElementById('eq-score').value = q.score;
         document.getElementById('eq-q').value = q.q; document.getElementById('eq-a').value = q.a; document.getElementById('eq-sp').value = q.sp || 'NORMAL';
         document.getElementById('modal-q-title').innerText = "✏️ Edit Soal"; openModal('modal-edit-question');
@@ -768,7 +682,6 @@
     }
     async function deleteQuestion(id) { if(confirm("Hapus soal ini secara permanen?")) { await db.collection('questions').doc(id).delete(); showToast("Soal dihapus!", "info"); loadQuestions(); } }
 
-    // Import Soal
     let parsedImportItems = [];
     function previewImport() {
         const text = document.getElementById('imp-text').value.trim(); if(!text) return;
@@ -878,7 +791,6 @@
         });
     }
 
-    // Fungsi Khusus Edit Skor Manual
     function openEditScoreModal(teamId) {
         const team = state.game.teams.find(t => t.id === teamId);
         if(!team) return;
