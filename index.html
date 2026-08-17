@@ -191,8 +191,13 @@
                 <div><h2 class="text-3xl font-black text-slate-800 mb-1">✏️ Bank Soal</h2><p class="text-slate-500 font-semibold">Kelola basis data pertanyaan Jeopardy.</p></div>
                 <button onclick="playSound('click'); openQuestionModal()" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-md">+ Buat Soal Manual</button>
             </div>
-            <div class="mb-6 shrink-0 bg-white p-2 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md">
-                <select id="flt-bank-quiz" onchange="loadQuestions()" class="w-full bg-slate-50 border-none text-slate-700 font-bold p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100"><option value="">Semua Paket Soal</option></select>
+            <div class="mb-6 shrink-0 bg-white p-4 rounded-2xl shadow-sm border border-slate-100 w-full">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <select id="flt-bank-filter-jenjang" onchange="onFilterJenjangChange('flt-bank')" class="bg-slate-50 border border-slate-200 text-slate-600 p-3 rounded-xl outline-none font-bold focus:border-indigo-400 transition-colors"><option value="">Semua Jenjang</option><option value="SD">SD</option><option value="SMP">SMP</option><option value="SMA">SMA</option><option value="Umum">Umum</option></select>
+                    <select id="flt-bank-filter-class" onchange="onFilterClassChange('flt-bank')" class="bg-slate-50 border border-slate-200 text-slate-600 p-3 rounded-xl outline-none font-bold focus:border-indigo-400 transition-colors"><option value="">Semua Kelas</option></select>
+                    <select id="flt-bank-filter-subject" onchange="applyQuizFilter('flt-bank')" class="bg-slate-50 border border-slate-200 text-slate-600 p-3 rounded-xl outline-none font-bold focus:border-indigo-400 transition-colors"><option value="">Semua Mapel</option></select>
+                    <select id="flt-bank-quiz" onchange="loadQuestions()" class="bg-indigo-50 border border-indigo-200 text-indigo-700 p-3 rounded-xl outline-none font-black focus:border-indigo-400 transition-colors"><option value="">-- Pilih Paket Soal --</option></select>
+                </div>
             </div>
             <div class="flex-1 overflow-y-auto relative bg-transparent rounded-2xl">
                 <div id="questions-table-body" class="space-y-3 pb-10"></div>
@@ -204,8 +209,13 @@
             <p class="text-slate-500 font-semibold mb-8">Masukkan puluhan soal sekaligus menggunakan hasil Copy-Paste.</p>
             
             <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm mb-6 shrink-0 max-w-4xl">
-                <label class="block text-sm font-bold text-slate-500 mb-2">1. Pilih Target Paket Soal</label>
-                <select id="imp-quiz" class="w-full bg-slate-50 border border-slate-200 text-slate-800 p-4 rounded-xl font-bold mb-6 outline-none focus:border-indigo-400 focus:bg-white transition-colors"><option value="">Pilih Paket...</option></select>
+                <label class="block text-sm font-bold text-slate-500 mb-2">1. Filter & Pilih Target Paket Soal</label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                    <select id="imp-filter-jenjang" onchange="onFilterJenjangChange('imp')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Jenjang</option><option value="SD">SD</option><option value="SMP">SMP</option><option value="SMA">SMA</option><option value="Umum">Umum</option></select>
+                    <select id="imp-filter-class" onchange="onFilterClassChange('imp')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Kelas</option></select>
+                    <select id="imp-filter-subject" onchange="applyQuizFilter('imp')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Mapel</option></select>
+                </div>
+                <select id="imp-quiz" class="w-full bg-indigo-50 border border-indigo-200 text-indigo-800 p-4 rounded-xl font-bold mb-6 outline-none focus:border-indigo-400 transition-colors"><option value="">-- Pilih Paket Soal --</option></select>
                 
                 <label class="block text-sm font-bold text-slate-500 mb-2">2. Paste Data Tabel Di Sini</label>
                 <textarea id="imp-text" rows="6" class="w-full bg-slate-50 border border-slate-200 text-slate-700 p-4 rounded-xl font-mono text-sm outline-none focus:border-indigo-400 focus:bg-white transition-colors" placeholder="Kategori | Poin | Pertanyaan | Jawaban | Kartu (NORMAL/ZONK/BONUS_X2)"></textarea>
@@ -273,8 +283,13 @@
         <input type="hidden" id="eq-id">
         <div class="flex-1 overflow-y-auto space-y-5 pr-2">
             <div>
-                <label class="text-xs text-slate-400 font-bold block mb-2 uppercase tracking-wide">Paket Soal Tujuan</label>
-                <select id="eq-quiz" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 p-3 rounded-xl font-bold outline-none"></select>
+                <label class="text-xs text-slate-400 font-bold block mb-2 uppercase tracking-wide">Pilih Tujuan Paket Soal</label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-2">
+                    <select id="eq-filter-jenjang" onchange="onFilterJenjangChange('eq')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-2 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Jenjang</option><option value="SD">SD</option><option value="SMP">SMP</option><option value="SMA">SMA</option><option value="Umum">Umum</option></select>
+                    <select id="eq-filter-class" onchange="onFilterClassChange('eq')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-2 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Kelas</option></select>
+                    <select id="eq-filter-subject" onchange="applyQuizFilter('eq')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-2 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Mapel</option></select>
+                </div>
+                <select id="eq-quiz" class="w-full bg-indigo-50 border border-indigo-200 focus:border-indigo-400 text-indigo-700 p-3 rounded-xl font-bold outline-none"><option value="">-- Pilih Paket Soal --</option></select>
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -326,8 +341,13 @@
         </div>
 
         <div class="bg-white rounded-[2rem] p-8 mb-6 shadow-sm border border-slate-100">
-            <h2 class="font-bold text-slate-500 text-sm tracking-wide uppercase mb-4">1. Pilih Paket Kuis</h2>
-            <select id="sg-quiz" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-4 rounded-xl outline-none font-bold text-indigo-700 text-lg"></select>
+            <h2 class="font-bold text-slate-500 text-sm tracking-wide uppercase mb-4">1. Filter & Pilih Paket Kuis</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <select id="sg-filter-jenjang" onchange="onFilterJenjangChange('sg')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Jenjang</option><option value="SD">SD</option><option value="SMP">SMP</option><option value="SMA">SMA</option><option value="Umum">Umum</option></select>
+                <select id="sg-filter-class" onchange="onFilterClassChange('sg')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Kelas</option></select>
+                <select id="sg-filter-subject" onchange="applyQuizFilter('sg')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Mapel</option></select>
+            </div>
+            <select id="sg-quiz" class="w-full bg-indigo-50 border border-indigo-200 focus:border-indigo-400 p-4 rounded-xl outline-none font-black text-indigo-700 text-xl transition-colors"><option value="">-- Pilih Paket Kuis --</option></select>
         </div>
 
         <div class="bg-white rounded-[2rem] p-8 mb-10 shadow-sm border border-slate-100">
@@ -342,7 +362,7 @@
             <div id="team-inputs-container" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </div>
 
-        <button onclick="playSound('click'); startGameSession()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold py-5 rounded-2xl shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:shadow-[0_10px_40px_rgba(79,70,229,0.4)]">MULAI GAME SEKARANG</button>
+        <button onclick="playSound('click'); startGameSession()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold py-5 rounded-2xl shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:shadow-[0_10px_40px_rgba(79,70,229,0.4)] transition-all">MULAI GAME SEKARANG</button>
     </div>
 </main>
 
@@ -366,6 +386,17 @@
     
     <div id="board-teams" class="mt-3 grid gap-3 shrink-0" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));"></div>
 </main>
+
+<div id="modal-edit-score" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 relative border border-slate-100 mx-auto">
+        <button onclick="playSound('click'); closeModal('modal-edit-score')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl transition-colors">&times;</button>
+        <h2 class="text-2xl font-black text-slate-800 mb-2">✏️ Edit Skor Manual</h2>
+        <p id="es-team-name" class="text-slate-500 font-bold mb-6">Nama Tim</p>
+        <input type="hidden" id="es-team-id">
+        <input type="number" id="es-score-val" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 text-center text-4xl font-black p-4 rounded-xl outline-none mb-6 transition-colors">
+        <button onclick="playSound('click'); saveTeamScore()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-md transition-all">SIMPAN SKOR</button>
+    </div>
+</div>
 
 <div id="modal-question" class="fixed inset-0 z-40 hidden flex items-center justify-center modal-overlay p-4">
     <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-5xl w-full flex flex-col min-h-[60vh] max-h-[95vh] overflow-hidden relative mx-auto">
@@ -416,7 +447,7 @@
         <div class="text-7xl mb-4 anim-bounce drop-shadow-md">🏆</div>
         <h1 class="text-4xl font-black text-indigo-800 mb-8 tracking-wide">HASIL AKHIR</h1>
         <div id="podium-list" class="w-full flex flex-col gap-3 mb-10 overflow-hidden px-2 py-4"></div>
-        <button onclick="playSound('click'); showScreen('screen-admin'); goAdmin('dash');" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-4 px-10 rounded-xl shadow-[0_8px_30px_rgba(79,70,229,0.3)]">🏠 KEMBALI KE DASHBOARD</button>
+        <button onclick="playSound('click'); showScreen('screen-admin'); goAdmin('dash');" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-4 px-10 rounded-xl shadow-[0_8px_30px_rgba(79,70,229,0.3)] transition-all">🏠 KEMBALI KE DASHBOARD</button>
     </div>
 </main>
 
@@ -425,17 +456,17 @@
     // SYSTEM SOUND EFFECTS ENGINE
     // ==========================================
     const sounds = {
-        click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'), // Modern Click
-        correct: new Audio('https://assets.mixkit.co/active_storage/sfx/952/952-preview.mp3'),   // Professional Correct Chime
-        wrong: new Audio('https://assets.mixkit.co/active_storage/sfx/946/946-preview.mp3'),     // Clear Buzzer Error
-        zonk: new Audio('https://assets.mixkit.co/active_storage/sfx/2024/2024-preview.mp3'),    // Dramatic Losing Piano
-        bonus: new Audio('https://assets.mixkit.co/active_storage/sfx/1936/1936-preview.mp3'),   // Magical Coin Reward
-        win: new Audio('https://assets.mixkit.co/active_storage/sfx/518/518-preview.mp3')        // Crowd Applause
+        click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+        correct: new Audio('https://assets.mixkit.co/active_storage/sfx/952/952-preview.mp3'),
+        wrong: new Audio('https://assets.mixkit.co/active_storage/sfx/946/946-preview.mp3'),
+        zonk: new Audio('https://assets.mixkit.co/active_storage/sfx/2024/2024-preview.mp3'),
+        bonus: new Audio('https://assets.mixkit.co/active_storage/sfx/1936/1936-preview.mp3'),
+        win: new Audio('https://assets.mixkit.co/active_storage/sfx/518/518-preview.mp3')
     };
-    function playSound(type) { try { sounds[type].currentTime = 0; sounds[type].play().catch(e=>console.log("Audio play prevented:", e)); } catch(e){} }
+    function playSound(type) { try { sounds[type].currentTime = 0; sounds[type].play().catch(e=>console.log("Audio prevented:", e)); } catch(e){} }
 
     // ==========================================
-    // LOGIKA FIREBASE
+    // LOGIKA FIREBASE & STATE
     // ==========================================
     const firebaseConfig = {
         apiKey: "AIzaSyAuFGbtry9REYNNtdSCM-HuB0jTvGOXBzA",
@@ -445,19 +476,16 @@
         messagingSenderId: "610799147721",
         appId: "1:610799147721:web:d677b846ff459342af0b18"
     };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
 
     const state = {
-        user: null, classes: [], subjects: [], setup: { quizId: '', teamCount: 4, teams: [] },
+        user: null, classes: [], subjects: [], quizzes: [], setup: { quizId: '', teamCount: 4, teams: [] },
         game: { sessionId: null, activeTeamId: null, teams: [], boardData: { categories: [], data: {} }, q: null },
-        loadedQuestions: {} // Caching untuk tombol edit cepat
+        loadedQuestions: {}
     };
 
     function showToast(msg, type = 'info') {
-        const c = document.getElementById('toast-container');
-        const t = document.createElement('div');
+        const c = document.getElementById('toast-container'); const t = document.createElement('div');
         t.className = `p-4 rounded-xl shadow-lg font-bold text-sm border ${type==='error'?'bg-rose-50 border-rose-100 text-rose-700':'bg-white border-slate-100 text-slate-700'}`;
         t.innerText = msg; c.appendChild(t); setTimeout(() => t.remove(), 3000);
     }
@@ -467,8 +495,7 @@
     function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); document.getElementById(id)?.classList.add('flex'); }
 
     async function submitLogin() {
-        const code = document.getElementById('input-access-code').value.trim();
-        if(!code) return;
+        const code = document.getElementById('input-access-code').value.trim(); if(!code) return;
         try {
             const snap = await db.collection('licenses').where('licenseKey', '==', code).get();
             if(snap.empty) { showToast("Kode Akses Salah!", "error"); return; }
@@ -481,7 +508,6 @@
     }
 
     function logout() { sessionStorage.removeItem('j_user'); location.reload(); }
-
     document.addEventListener("DOMContentLoaded", () => {
         const u = sessionStorage.getItem('j_user');
         if(u) { state.user = JSON.parse(u); fetchHierarchyData(); goAdmin('dash'); }
@@ -493,6 +519,8 @@
         state.classes = clSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         const sjSnap = await db.collection('subjects').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
         state.subjects = sjSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const qzSnap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
+        state.quizzes = qzSnap.docs.map(d => ({ id: d.id, ...d.data() }));
     }
 
     function goAdmin(subId) {
@@ -510,8 +538,69 @@
     }
 
     // ==========================================
-    // MENU CRUD (DASHBOARD, KELAS, MAPEL, KUIS)
+    // MENU CRUD & FILTER CASCADING TERBARU
     // ==========================================
+    function onFilterJenjangChange(prefix) {
+        const j = document.getElementById(`${prefix}-filter-jenjang`).value;
+        const cSel = document.getElementById(`${prefix}-filter-class`);
+        const sSel = document.getElementById(`${prefix}-filter-subject`);
+        
+        cSel.innerHTML = '<option value="">Semua Kelas</option>';
+        state.classes.filter(x => !j || x.jenjang === j).forEach(cls => cSel.innerHTML += `<option value="${cls.id}">${cls.name}</option>`);
+        
+        sSel.innerHTML = '<option value="">Semua Mapel</option>';
+        applyQuizFilter(prefix);
+    }
+
+    function onFilterClassChange(prefix) {
+        const c = document.getElementById(`${prefix}-filter-class`).value;
+        const sSel = document.getElementById(`${prefix}-filter-subject`);
+        
+        sSel.innerHTML = '<option value="">Semua Mapel</option>';
+        state.subjects.filter(x => !c || x.classId === c).forEach(sub => sSel.innerHTML += `<option value="${sub.id}">${sub.name}</option>`);
+        
+        applyQuizFilter(prefix);
+    }
+
+    function applyQuizFilter(prefix) {
+        const j = document.getElementById(`${prefix}-filter-jenjang`).value;
+        const c = document.getElementById(`${prefix}-filter-class`).value;
+        const s = document.getElementById(`${prefix}-filter-subject`).value;
+        const qSel = document.getElementById(prefix === 'flt-bank' ? 'flt-bank-quiz' : `${prefix}-quiz`);
+        
+        let filtered = state.quizzes || [];
+        if(j) filtered = filtered.filter(q => q.jenjang === j);
+        if(c) filtered = filtered.filter(q => q.classId === c);
+        if(s) filtered = filtered.filter(q => q.subjectId === s);
+
+        qSel.innerHTML = '<option value="">-- Pilih Paket Soal --</option>';
+        filtered.forEach(q => qSel.innerHTML += `<option value="${q.id}">${q.name}</option>`);
+
+        if(prefix === 'flt-bank') loadQuestions(); // Khusus bank soal langsung load
+    }
+
+    async function populateQuizSelects() {
+        if(!state.quizzes || state.quizzes.length === 0) await fetchHierarchyData();
+        // Paksa cascade berjalan di semua menu yang ada filternos
+        ['flt-bank', 'imp', 'sg', 'eq'].forEach(prefix => {
+            const jSel = document.getElementById(`${prefix}-filter-jenjang`);
+            if(jSel) { jSel.value = ""; onFilterJenjangChange(prefix); }
+        });
+    }
+
+    // Modal Form Functions Helper
+    function updateClassDropdown(jId, cId) {
+        const j = document.getElementById(jId).value; const sel = document.getElementById(cId);
+        sel.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+        state.classes.filter(x => x.jenjang === j).forEach(c => sel.innerHTML += `<option value="${c.id}">${c.name}</option>`);
+    }
+    function updateSubjectDropdown(cId, sId) {
+        const cVal = document.getElementById(cId).value; const sel = document.getElementById(sId);
+        sel.innerHTML = '<option value="">-- Pilih Mapel --</option>';
+        state.subjects.filter(x => x.classId === cVal).forEach(s => sel.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+    }
+
+    // Dashboard
     async function loadDashboard() {
         try {
             const qzSnap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
@@ -529,11 +618,11 @@
         } catch(e) { showToast(e.message, "error"); }
     }
 
+    // Kelas
     async function loadClasses() {
-        await fetchHierarchyData();
-        const cnt = { SD: 0, SMP: 0, SMA: 0, Umum: 0 };
+        await fetchHierarchyData(); const cnt = { SD: 0, SMP: 0, SMA: 0, Umum: 0 };
         const container = document.getElementById('class-list-container'); container.innerHTML = '';
-        if(state.classes.length === 0) { container.innerHTML = '<p class="text-slate-400 col-span-full">Belum ada data kelas.</p>'; }
+        if(state.classes.length === 0) container.innerHTML = '<p class="text-slate-400 col-span-full">Belum ada data kelas.</p>';
         state.classes.forEach(c => {
             if(cnt[c.jenjang] !== undefined) cnt[c.jenjang]++;
             container.innerHTML += `<div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center"><div><span class="text-[10px] font-black uppercase text-indigo-400 bg-indigo-50 px-2 py-0.5 rounded">${c.jenjang}</span><h3 class="font-black text-slate-800 text-lg mt-1">${c.name}</h3></div><button onclick="playSound('click'); deleteClass('${c.id}')" class="text-rose-400 hover:text-rose-600 text-xl">&times;</button></div>`;
@@ -549,6 +638,7 @@
     }
     async function deleteClass(id) { if(confirm("Hapus kelas ini?")) { await db.collection('classes').doc(id).delete(); loadClasses(); } }
     
+    // Mapel
     async function loadSubjects() {
         await fetchHierarchyData(); const container = document.getElementById('subject-list-container'); container.innerHTML = '';
         if(state.subjects.length === 0) { container.innerHTML = '<p class="text-slate-400 col-span-full">Belum ada data mapel.</p>'; return; }
@@ -566,25 +656,16 @@
     }
     async function deleteSubject(id) { if(confirm("Hapus mapel ini?")) { await db.collection('subjects').doc(id).delete(); loadSubjects(); } }
 
-    function updateClassDropdown(jId, cId) {
-        const j = document.getElementById(jId).value; const sel = document.getElementById(cId);
-        sel.innerHTML = '<option value="">-- Pilih Kelas --</option>';
-        state.classes.filter(x => x.jenjang === j).forEach(c => sel.innerHTML += `<option value="${c.id}">${c.name}</option>`);
-    }
-    function updateSubjectDropdown(cId, sId) {
-        const cVal = document.getElementById(cId).value; const sel = document.getElementById(sId);
-        sel.innerHTML = '<option value="">-- Pilih Mapel --</option>';
-        state.subjects.filter(x => x.classId === cVal).forEach(s => sel.innerHTML += `<option value="${s.id}">${s.name}</option>`);
-    }
-
+    // Quizzes (Paket)
     async function loadQuizzes() {
         const c = document.getElementById('quiz-list-container'); c.innerHTML = '<p class="text-slate-400 font-bold col-span-full">Memuat...</p>';
         try {
             const snap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get(); c.innerHTML = '';
+            state.quizzes = snap.docs.map(d => ({ id: d.id, ...d.data() })); // Cache untuk filter
             if(snap.empty) { c.innerHTML = '<p class="text-slate-400 font-bold col-span-full">Belum ada paket.</p>'; return; }
-            snap.forEach(doc => {
-                const q = doc.data(); const cls = state.classes.find(x => x.id === q.classId)?.name || 'Umum'; const subj = state.subjects.find(x => x.id === q.subjectId)?.name || 'Bebas';
-                c.innerHTML += `<div class="bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"><div><span class="text-[10px] font-black uppercase text-indigo-400 mb-2 block">${q.jenjang||'-'} • ${cls} • ${subj}</span><h3 class="font-black text-slate-800 text-xl mb-6">${q.name}</h3></div><button onclick="playSound('click'); deleteQuiz('${doc.id}')" class="btn self-start text-rose-400 hover:text-rose-600 font-bold text-sm transition-colors">Hapus Paket</button></div>`;
+            state.quizzes.forEach(q => {
+                const cls = state.classes.find(x => x.id === q.classId)?.name || 'Umum'; const subj = state.subjects.find(x => x.id === q.subjectId)?.name || 'Bebas';
+                c.innerHTML += `<div class="bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"><div><span class="text-[10px] font-black uppercase text-indigo-400 mb-2 block">${q.jenjang||'-'} • ${cls} • ${subj}</span><h3 class="font-black text-slate-800 text-xl mb-6">${q.name}</h3></div><button onclick="playSound('click'); deleteQuiz('${q.id}')" class="btn self-start text-rose-400 hover:text-rose-600 font-bold text-sm transition-colors">Hapus Paket</button></div>`;
             });
         } catch(e) { showToast(e.message, "error"); }
     }
@@ -596,17 +677,7 @@
     }
     async function deleteQuiz(id) { if(confirm("Hapus paket soal ini beserta seluruh isinya?")) { await db.collection('quizzes').doc(id).delete(); showToast("Paket dihapus", "info"); loadQuizzes(); } }
 
-    async function populateQuizSelects() {
-        const snap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
-        ['flt-bank-quiz', 'eq-quiz', 'imp-quiz', 'sg-quiz'].forEach(selectId => {
-            const el = document.getElementById(selectId); if(!el) return; el.innerHTML = '<option value="">Pilih Paket Kuis...</option>';
-            snap.forEach(doc => el.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`);
-        });
-    }
-
-    // ==========================================
-    // MENU BANK SOAL (FITUR TOMBOL EDIT DITAMBAHKAN)
-    // ==========================================
+    // Bank Soal
     async function loadQuestions() {
         const quizId = document.getElementById('flt-bank-quiz').value;
         const tbody = document.getElementById('questions-table-body');
@@ -616,19 +687,14 @@
             if(quizId) ref = ref.where('quizId', '==', quizId);
             const snap = await ref.get(); tbody.innerHTML = '';
             if(snap.empty) { tbody.innerHTML = '<p class="text-slate-400 font-bold p-4">Tidak ada soal.</p>'; return; }
-
-            state.loadedQuestions = {}; // Reset cache memori
-
+            state.loadedQuestions = {}; 
             snap.forEach(doc => {
-                const q = doc.data();
-                state.loadedQuestions[doc.id] = q; // Simpan di memori untuk bisa di-edit
-                
+                const q = doc.data(); state.loadedQuestions[doc.id] = q; 
                 let specialTag = '';
                 if(q.sp && q.sp !== 'NORMAL') {
                     const tagColor = q.sp === 'ZONK' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600';
                     specialTag = `<span class="ml-2 ${tagColor} px-2 py-0.5 rounded text-[9px]">${q.sp}</span>`;
                 }
-                
                 tbody.innerHTML += `
                     <div class="bg-white border border-slate-100 shadow-sm p-5 rounded-2xl flex justify-between items-start gap-4">
                         <div class="flex-1">
@@ -640,8 +706,7 @@
                             <button onclick="playSound('click'); editQuestion('${doc.id}')" class="btn text-blue-500 hover:text-white hover:bg-blue-500 bg-blue-50 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">✏️ EDIT</button>
                             <button onclick="playSound('click'); deleteQuestion('${doc.id}')" class="btn text-rose-500 hover:text-white hover:bg-rose-500 bg-rose-50 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">🗑️ HAPUS</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
         } catch(e) { showToast(e.message, "error"); }
     }
@@ -653,64 +718,42 @@
     }
 
     function editQuestion(id) {
-        const q = state.loadedQuestions[id];
-        if(!q) return;
+        const q = state.loadedQuestions[id]; if(!q) return;
         document.getElementById('eq-id').value = id;
-        document.getElementById('eq-quiz').value = q.quizId;
-        document.getElementById('eq-cat').value = q.cat;
-        document.getElementById('eq-score').value = q.score;
-        document.getElementById('eq-q').value = q.q;
-        document.getElementById('eq-a').value = q.a;
-        document.getElementById('eq-sp').value = q.sp || 'NORMAL';
-        document.getElementById('modal-q-title').innerText = "✏️ Edit Soal";
-        openModal('modal-edit-question');
+        document.getElementById('eq-cat').value = q.cat; document.getElementById('eq-score').value = q.score;
+        document.getElementById('eq-q').value = q.q; document.getElementById('eq-a').value = q.a; document.getElementById('eq-sp').value = q.sp || 'NORMAL';
+        document.getElementById('modal-q-title').innerText = "✏️ Edit Soal"; openModal('modal-edit-question');
     }
 
     async function saveQuestion() {
-        const id = document.getElementById('eq-id').value;
-        const quizId = document.getElementById('eq-quiz').value;
-        const cat = document.getElementById('eq-cat').value.trim().toUpperCase();
-        const score = parseInt(document.getElementById('eq-score').value) || 10;
-        const q = document.getElementById('eq-q').value.trim();
-        const a = document.getElementById('eq-a').value.trim();
-        const sp = document.getElementById('eq-sp').value;
-
-        if(!quizId || !cat || !q || !a) { showToast("Lengkapi semua isian!", "error"); return; }
+        const id = document.getElementById('eq-id').value; const quizId = document.getElementById('eq-quiz').value;
+        const cat = document.getElementById('eq-cat').value.trim().toUpperCase(); const score = parseInt(document.getElementById('eq-score').value) || 10;
+        const q = document.getElementById('eq-q').value.trim(); const a = document.getElementById('eq-a').value.trim(); const sp = document.getElementById('eq-sp').value;
+        if(!quizId || !cat || !q || !a) { showToast("Pilih paket kuis & lengkapi isian!", "error"); return; }
         const data = { owner: state.user.licenseId, quizId: quizId, cat: cat, score: score, q: q, a: a, sp: sp };
-
         try {
             if(id) { await db.collection('questions').doc(id).update(data); showToast("Soal diperbarui!", "success"); } 
             else { await db.collection('questions').add(data); showToast("Soal ditambahkan!", "success"); }
             closeModal('modal-edit-question'); loadQuestions();
         } catch(e) { showToast(e.message, "error"); }
     }
+    async function deleteQuestion(id) { if(confirm("Hapus soal ini secara permanen?")) { await db.collection('questions').doc(id).delete(); showToast("Soal dihapus!", "info"); loadQuestions(); } }
 
-    async function deleteQuestion(id) {
-        if(confirm("Hapus soal ini secara permanen?")) {
-            await db.collection('questions').doc(id).delete(); showToast("Soal dihapus!", "info"); loadQuestions();
-        }
-    }
-
-    // ==========================================
-    // IMPORT SOAL AI
-    // ==========================================
+    // Import Soal
     let parsedImportItems = [];
     function previewImport() {
         const text = document.getElementById('imp-text').value.trim(); if(!text) return;
         parsedImportItems = [];
         text.split('\n').forEach(line => {
             const cols = line.split('\t').length >= 4 ? line.split('\t') : line.split('|');
-            if(cols.length >= 4) {
-                parsedImportItems.push({ cat: cols[0].trim().toUpperCase(), score: parseInt(cols[1])||10, q: cols[2].trim(), a: cols[3].trim(), sp: cols[4] ? cols[4].trim().toUpperCase() : 'NORMAL' });
-            }
+            if(cols.length >= 4) { parsedImportItems.push({ cat: cols[0].trim().toUpperCase(), score: parseInt(cols[1])||10, q: cols[2].trim(), a: cols[3].trim(), sp: cols[4] ? cols[4].trim().toUpperCase() : 'NORMAL' }); }
         });
         const list = document.getElementById('imp-preview-list');
         list.innerHTML = parsedImportItems.map((it, i) => `
             <div class="flex justify-between border-b border-slate-200 py-2">
                 <span><span class="text-indigo-400 font-black">[#${i+1}]</span> ${it.cat} (${it.score} Pts): ${it.q}</span>
                 <span class="text-[10px] font-black px-2 py-1 rounded ${it.sp==='NORMAL'?'bg-slate-100 text-slate-400':'bg-orange-100 text-orange-600'}">${it.sp}</span>
-            </div>
-        `).join('');
+            </div>`).join('');
         document.getElementById('imp-preview-box').classList.remove('hidden');
     }
 
@@ -723,7 +766,7 @@
     }
 
     // ==========================================
-    // GAME ENGINE & LOGIKA SPESIAL & AUTO FINISH
+    // GAME ENGINE & EDIT SKOR MANUAL
     // ==========================================
     function initSetup() { populateQuizSelects(); changeTeamCount(0); }
     function changeTeamCount(delta) {
@@ -785,7 +828,14 @@
     function buildScoreboard() {
         const c = document.getElementById('board-teams'); c.innerHTML = '';
         state.game.teams.forEach(t => {
-            c.innerHTML += `<div id="sb-${t.id}" class="bg-white border border-slate-200 shadow-sm rounded-2xl p-4 flex flex-col items-center transition-all"><span class="text-slate-500 font-bold text-[10px] uppercase tracking-wider">${t.name}</span><span id="score-${t.id}" class="text-slate-800 font-black text-2xl md:text-3xl my-1">${t.score}</span></div>`;
+            c.innerHTML += `
+                <div id="sb-${t.id}" class="bg-white border border-slate-200 shadow-sm rounded-2xl p-4 flex flex-col items-center transition-all relative group">
+                    <button onclick="playSound('click'); openEditScoreModal('${t.id}')" title="Edit Skor Manual" class="absolute top-2 right-2 text-slate-300 hover:text-indigo-600 transition-colors p-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    </button>
+                    <span class="text-slate-500 font-bold text-[10px] uppercase tracking-wider mt-1">${t.name}</span>
+                    <span id="score-${t.id}" class="text-slate-800 font-black text-2xl md:text-3xl my-1">${t.score}</span>
+                </div>`;
         });
         updateActiveTeamHeader();
     }
@@ -799,120 +849,96 @@
         });
     }
 
+    // Fungsi Khusus Edit Skor Manual
+    function openEditScoreModal(teamId) {
+        const team = state.game.teams.find(t => t.id === teamId);
+        if(!team) return;
+        document.getElementById('es-team-id').value = team.id;
+        document.getElementById('es-team-name').innerText = `Tim: ${team.name}`;
+        document.getElementById('es-score-val').value = team.score;
+        openModal('modal-edit-score');
+    }
+
+    function saveTeamScore() {
+        const teamId = document.getElementById('es-team-id').value;
+        const newScore = parseInt(document.getElementById('es-score-val').value) || 0;
+        const team = state.game.teams.find(t => t.id === teamId);
+        if(team) {
+            team.score = newScore;
+            showToast(`Skor ${team.name} diperbarui secara manual.`, 'success');
+        }
+        closeModal('modal-edit-score');
+        buildScoreboard(); 
+    }
+
     function openQuestion(catName, qIndex) {
         const q = state.game.boardData.data[catName][qIndex];
         state.game.q = { cat: catName, idx: qIndex, data: q };
 
-        // DETEKSI LOGIKA SPECIAL CARDS (ZONK / BONUS) DENGAN FULL SCREEN EFFECT
-        if(q.sp === 'ZONK') {
-            playSpecialEffect('ZONK');
-            return; // Hentikan di sini, jangan buka modal pertanyaan biasa
-        } else if(q.sp === 'BONUS_X2' || q.sp === 'BONUS_X5') {
-            playSpecialEffect(q.sp);
-            // Modal full screen akan otomatis menutup dan lanjut ke showQuestionModal
-            return;
-        }
+        if(q.sp === 'ZONK') { playSpecialEffect('ZONK'); return; } 
+        else if(q.sp === 'BONUS_X2' || q.sp === 'BONUS_X5') { playSpecialEffect(q.sp); return; }
 
-        // Jika normal, langsung buka soal
         showQuestionModal(q, catName);
     }
     
     function showQuestionModal(q, catName) {
         playSound('click');
-        
-        // Atur Banner Biasa di dalam modal soal (jika soalnya bekas Bonus)
         const banner = document.getElementById('q-special-banner');
         if(q.sp === 'BONUS_X2') { banner.innerText = "🔥 BONUS POIN X2! 🔥"; banner.classList.remove('hidden'); }
         else if(q.sp === 'BONUS_X5') { banner.innerText = "🔥🔥 MEGA BONUS POIN X5! 🔥🔥"; banner.classList.remove('hidden'); }
         else { banner.classList.add('hidden'); }
 
-        document.getElementById('q-modal-category').innerText = catName;
-        document.getElementById('q-modal-score').innerText = `${q.score} PTS`;
-        document.getElementById('q-modal-text').innerText = q.q;
-        document.getElementById('q-modal-answer').innerText = q.a;
+        document.getElementById('q-modal-category').innerText = catName; document.getElementById('q-modal-score').innerText = `${q.score} PTS`;
+        document.getElementById('q-modal-text').innerText = q.q; document.getElementById('q-modal-answer').innerText = q.a;
 
-        document.getElementById('q-ans-box').classList.add('hidden');
-        document.getElementById('q-phase-select').classList.remove('hidden');
-        document.getElementById('q-phase-validate').classList.add('hidden');
-        document.getElementById('q-phase-finished').classList.add('hidden');
+        document.getElementById('q-ans-box').classList.add('hidden'); document.getElementById('q-phase-select').classList.remove('hidden');
+        document.getElementById('q-phase-validate').classList.add('hidden'); document.getElementById('q-phase-finished').classList.add('hidden');
 
         const buzzer = document.getElementById('q-buzzer-container'); buzzer.innerHTML = '';
         state.game.teams.forEach(t => {
             const b = document.createElement('button');
             b.className = "btn bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 shadow-sm px-6 py-4 rounded-xl font-bold text-lg flex-1 min-w-[120px] transition-colors";
             b.innerText = t.name;
-            b.onclick = () => {
-                playSound('click'); state.game.answeringTeamId = t.id; document.getElementById('q-answering-team').innerText = t.name;
-                document.getElementById('q-phase-select').classList.add('hidden'); document.getElementById('q-phase-validate').classList.remove('hidden');
-            };
+            b.onclick = () => { playSound('click'); state.game.answeringTeamId = t.id; document.getElementById('q-answering-team').innerText = t.name; document.getElementById('q-phase-select').classList.add('hidden'); document.getElementById('q-phase-validate').classList.remove('hidden'); };
             buzzer.appendChild(b);
         });
-
         openModal('modal-question');
     }
 
     function playSpecialEffect(type) {
-        const modal = document.getElementById('modal-special-effect');
-        const content = document.getElementById('se-content');
-        const title = document.getElementById('se-title');
-        const icon = document.getElementById('se-icon');
-        const action = document.getElementById('se-action');
+        const modal = document.getElementById('modal-special-effect'); const content = document.getElementById('se-content');
+        const title = document.getElementById('se-title'); const icon = document.getElementById('se-icon'); const action = document.getElementById('se-action');
         
         modal.classList.remove('hidden'); modal.classList.add('flex');
-        
-        // Trigger Pop Animation
-        content.classList.remove('scale-bounce');
-        void content.offsetWidth;
-        content.classList.add('scale-bounce');
+        content.classList.remove('scale-bounce'); void content.offsetWidth; content.classList.add('scale-bounce');
 
         if(type === 'ZONK') {
-            playSound('zonk');
-            icon.innerText = '💣';
-            title.innerText = 'AWAS ZONK!';
+            playSound('zonk'); icon.innerText = '💣'; title.innerText = 'AWAS ZONK!';
             title.className = 'text-6xl md:text-8xl font-black text-rose-500 mb-6 tracking-widest drop-shadow-[0_0_20px_rgba(244,63,94,0.8)] text-center';
-            
             const activeTeam = state.game.teams.find(t => t.id === state.game.activeTeamId);
-            document.getElementById('se-team-name').innerText = activeTeam.name;
-            action.classList.remove('hidden');
-            
+            document.getElementById('se-team-name').innerText = activeTeam.name; action.classList.remove('hidden');
         } else {
-            playSound('bonus');
-            icon.innerText = '🎁';
-            title.innerText = type === 'BONUS_X2' ? 'BONUS X2!' : 'MEGA BONUS X5!';
+            playSound('bonus'); icon.innerText = '🎁'; title.innerText = type === 'BONUS_X2' ? 'BONUS X2!' : 'MEGA BONUS X5!';
             title.className = 'text-6xl md:text-8xl font-black text-amber-400 mb-6 tracking-widest drop-shadow-[0_0_20px_rgba(251,191,36,0.8)] text-center leading-tight';
             action.classList.add('hidden');
-            
             confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
-
-            // Auto close after 3.5 seconds and show the question
-            setTimeout(() => {
-                modal.classList.add('hidden'); modal.classList.remove('flex');
-                showQuestionModal(state.game.q.data, state.game.q.cat);
-            }, 3500);
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); showQuestionModal(state.game.q.data, state.game.q.cat); }, 3500);
         }
     }
 
     function applyZonk() {
-        playSound('click');
-        const team = state.game.teams.find(t => t.id === state.game.activeTeamId);
-        team.score = 0; // Logika khusus: SKOR HANGUS
-        state.game.q.data.status = 'USED'; // Soal dianggap sudah dimainkan
-        
+        playSound('click'); const team = state.game.teams.find(t => t.id === state.game.activeTeamId);
+        team.score = 0; state.game.q.data.status = 'USED'; 
         showToast(`💣 KENA ZONK! Skor ${team.name} Hangus (0)!`, 'error');
-        
-        // Ganti giliran ke tim selanjutnya
         const currentIdx = state.game.teams.findIndex(t => t.id === state.game.activeTeamId);
         state.game.activeTeamId = state.game.teams[(currentIdx + 1) % state.game.teams.length].id;
         
-        // Tutup Modal Spesial dan kembali ke layar papan
-        document.getElementById('modal-special-effect').classList.add('hidden'); 
-        document.getElementById('modal-special-effect').classList.remove('flex');
+        document.getElementById('modal-special-effect').classList.add('hidden'); document.getElementById('modal-special-effect').classList.remove('flex');
         returnToBoard(); 
     }
 
     function processAnswer(isCorrect) {
-        const qData = state.game.q.data;
-        const team = state.game.teams.find(t => t.id === state.game.answeringTeamId);
+        const qData = state.game.q.data; const team = state.game.teams.find(t => t.id === state.game.answeringTeamId);
         let points = qData.score;
 
         if(isCorrect) {
@@ -921,53 +947,31 @@
             else if(qData.sp === 'BONUS_X5') { points *= 5; playSound('bonus'); msg = " (MEGA BONUS X5!)"; }
             else { playSound('correct'); }
             
-            team.score += points; qData.status = 'USED'; 
-            showToast(`✅ ${team.name} Benar +${points} PTS!${msg}`, 'success');
+            team.score += points; qData.status = 'USED'; showToast(`✅ ${team.name} Benar +${points} PTS!${msg}`, 'success');
         } else {
-            team.score -= points; playSound('wrong');
-            showToast(`❌ ${team.name} Salah -${points} PTS!`, 'error');
+            team.score -= points; playSound('wrong'); showToast(`❌ ${team.name} Salah -${points} PTS!`, 'error');
         }
 
         document.getElementById(`score-${team.id}`).innerText = team.score;
-        document.getElementById('q-phase-validate').classList.add('hidden');
-        document.getElementById('q-phase-finished').classList.remove('hidden');
-        document.getElementById('q-ans-box').classList.remove('hidden');
+        document.getElementById('q-phase-validate').classList.add('hidden'); document.getElementById('q-phase-finished').classList.remove('hidden'); document.getElementById('q-ans-box').classList.remove('hidden');
 
-        // Ganti giliran ke tim selanjutnya
         const currentIdx = state.game.teams.findIndex(t => t.id === state.game.activeTeamId);
         state.game.activeTeamId = state.game.teams[(currentIdx + 1) % state.game.teams.length].id;
     }
 
     function toggleAnswerReveal() { document.getElementById('q-ans-box').classList.toggle('hidden'); }
-    
-    function closeAndDiscardQuestion() {
-        state.game.q.data.status = 'USED'; // Paksa status agar hangus jika semua tim menyerah
-        returnToBoard();
-    }
+    function closeAndDiscardQuestion() { state.game.q.data.status = 'USED'; returnToBoard(); }
 
     function returnToBoard() {
-        closeModal('modal-question');
-        buildBoard();
-        buildScoreboard();
-
-        // CEK AUTO FINISH GAME
-        const b = state.game.boardData;
-        let total = 0, used = 0;
+        closeModal('modal-question'); buildBoard(); buildScoreboard();
+        const b = state.game.boardData; let total = 0, used = 0;
         b.categories.forEach(c => { b.data[c].forEach(q => { if(q) { total++; if(q.status === 'USED') used++; } }); });
-        
-        if(total > 0 && used === total) {
-            // Jika semua soal sudah dijawab, akhiri otomatis dengan efek dramatis
-            setTimeout(() => forceFinishGame(), 1000); 
-        }
+        if(total > 0 && used === total) { setTimeout(() => forceFinishGame(), 1000); }
     }
 
     function forceFinishGame() {
         playSound('win');
-        
-        // Hujan Confetti Meriah di layar akhir
-        const duration = 5 * 1000;
-        const animationEnd = Date.now() + duration;
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 200 };
+        const duration = 5 * 1000; const animationEnd = Date.now() + duration; const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 200 };
         function randomInRange(min, max) { return Math.random() * (max - min) + min; }
         const interval = setInterval(function() {
             const timeLeft = animationEnd - Date.now();
@@ -979,9 +983,8 @@
 
         const sorted = [...state.game.teams].sort((a,b) => b.score - a.score);
         const podium = document.getElementById('podium-list'); podium.innerHTML = '';
-        
         sorted.forEach((t, i) => {
-            let delay = i * 0.2; // Animasi muncul bergantian 
+            let delay = i * 0.2; 
             podium.innerHTML += `
                 <div class="anim-slide-up flex justify-between items-center p-6 bg-white border border-slate-100 rounded-2xl shadow-md" style="animation-delay: ${delay}s">
                     <span class="font-black text-2xl ${i===0?'text-amber-500 text-3xl':'text-slate-600'}">#${i+1} ${t.name}</span>
