@@ -468,6 +468,9 @@
     // ==========================================
     // LOGIKA FIREBASE & STATE
     // ==========================================
+  // ==========================================
+    // LOGIKA FIREBASE, STATE & SESSION SECURITY
+    // ==========================================
     const firebaseConfig = {
         apiKey: "AIzaSyAuFGbtry9REYNNtdSCM-HuB0jTvGOXBzA",
         authDomain: "jeopardy-classroom-game.firebaseapp.com",
@@ -494,48 +497,74 @@
     function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); document.getElementById(id)?.classList.remove('flex'); }
     function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); document.getElementById(id)?.classList.add('flex'); }
 
+    // --- NETFLIX-STYLE SESSION SECURITY ---
+    let sessionListener = null;
+
     async function submitLogin() {
         const code = document.getElementById('input-access-code').value.trim(); if(!code) return;
         try {
             const snap = await db.collection('licenses').where('licenseKey', '==', code).get();
             if(snap.empty) { showToast("Kode Akses Salah!", "error"); return; }
+            
             const doc = snap.docs[0]; const data = doc.data();
             if(data.status !== 'ACTIVE') { showToast("Lisensi Tidak Aktif!", "error"); return; }
-            state.user = { licenseId: doc.id, customerName: data.customerName, plan: data.plan };
+            
+            // 1. Buat ID Sesi Unik untuk login ini
+            const newSessionId = 'SESS-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            
+            // 2. Update sesi di database (Ini akan memicu 'tendangan' di perangkat lain)
+            await db.collection('licenses').doc(doc.id).update({ activeSession: newSessionId });
+            
+            // 3. Simpan data user beserta Session ID di browser
+            state.user = { licenseId: doc.id, customerName: data.customerName, plan: data.plan, sessionId: newSessionId };
             sessionStorage.setItem('j_user', JSON.stringify(state.user));
-            closeModal('modal-login'); fetchHierarchyData(); goAdmin('dash');
+            
+            closeModal('modal-login'); 
+            startSessionListener(state.user.licenseId, state.user.sessionId);
+            fetchHierarchyData(); goAdmin('dash');
         } catch(e) { showToast(e.message, "error"); }
     }
 
-    function logout() { sessionStorage.removeItem('j_user'); location.reload(); }
+    function startSessionListener(licenseId, mySessionId) {
+        // Listener Real-time yang memantau dokumen lisensi
+        if(sessionListener) sessionListener(); // Bersihkan listener lama jika ada
+        
+        sessionListener = db.collection('licenses').doc(licenseId).onSnapshot(doc => {
+            if(doc.exists) {
+                const data = doc.data();
+                // Jika activeSession di database berbeda dengan sessionId di browser ini
+                if(data.activeSession && data.activeSession !== mySessionId) {
+                    forceLogout("⚠️ Akses Terputus! Akun Anda baru saja digunakan untuk masuk di perangkat lain.");
+                } else if (data.status !== 'ACTIVE') {
+                    forceLogout("⚠️ Lisensi dinonaktifkan oleh Admin.");
+                }
+            }
+        });
+    }
+
+    function forceLogout(reasonMsg) {
+        if(sessionListener) sessionListener(); // Matikan listener
+        sessionStorage.removeItem('j_user');
+        alert(reasonMsg); // Gunakan alert bawaan agar menahan layar sampai diklik OK
+        location.reload();
+    }
+
+    function logout() { 
+        if(sessionListener) sessionListener();
+        sessionStorage.removeItem('j_user'); 
+        location.reload(); 
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         const u = sessionStorage.getItem('j_user');
-        if(u) { state.user = JSON.parse(u); fetchHierarchyData(); goAdmin('dash'); }
+        if(u) { 
+            state.user = JSON.parse(u); 
+            // Aktifkan pelindung sesi segera setelah halaman dimuat ulang
+            startSessionListener(state.user.licenseId, state.user.sessionId);
+            fetchHierarchyData(); goAdmin('dash'); 
+        }
     });
-
-    async function fetchHierarchyData() {
-        if(!state.user) return;
-        const clSnap = await db.collection('classes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
-        state.classes = clSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        const sjSnap = await db.collection('subjects').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
-        state.subjects = sjSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        const qzSnap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
-        state.quizzes = qzSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-    }
-
-    function goAdmin(subId) {
-        if(!state.user) { showScreen('screen-cover'); return; }
-        document.getElementById('admin-user-name').innerText = state.user.customerName;
-        document.getElementById('admin-user-plan').innerText = state.user.plan || 'MEMBER';
-        showScreen('screen-admin');
-        document.querySelectorAll('[id^="admin-sub-"]').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
-        document.getElementById(`admin-sub-${subId}`)?.classList.remove('hidden');
-        document.getElementById(`nav-${subId}`)?.classList.add('active');
-        if(subId === 'dash') loadDashboard(); if(subId === 'class') loadClasses();
-        if(subId === 'subject') loadSubjects(); if(subId === 'quiz') loadQuizzes();
-        if(subId === 'bank' || subId === 'import') populateQuizSelects();
-    }
+    // --- AKHIR NETFLIX-STYLE SESSION SECURITY ---
 
     // ==========================================
     // MENU CRUD & FILTER CASCADING TERBARU
