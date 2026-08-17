@@ -11,6 +11,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         :root { --bg-main: #f8fafc; --accent: #6366f1; }
         body { font-family: 'Nunito', sans-serif; background-color: var(--bg-main); color: #334155; margin: 0; overflow-x: hidden; user-select: none; }
@@ -36,6 +38,9 @@
 
         @keyframes bounceIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .anim-bounce { animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        @keyframes scaleBounce { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        .scale-bounce { animation: scaleBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         
         @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(40px); } 100% { opacity: 1; transform: translateY(0); } }
         .anim-slide-up { animation: slideUpFade 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; }
@@ -303,6 +308,16 @@
     </div>
 </div>
 
+<div id="modal-special-effect" class="fixed inset-0 z-[60] hidden flex-col items-center justify-center bg-slate-900/90 backdrop-blur-sm">
+    <div id="se-content" class="flex flex-col items-center transform scale-0 transition-transform duration-500">
+        <div id="se-icon" class="text-9xl mb-4">💣</div>
+        <h2 id="se-title" class="text-6xl md:text-8xl font-black text-white mb-6 tracking-widest drop-shadow-lg text-center leading-tight">ZONK!</h2>
+        <div id="se-action" class="mt-8 hidden">
+            <button onclick="applyZonk()" class="btn bg-rose-500 hover:bg-rose-600 text-white font-black text-2xl md:text-3xl py-5 px-12 rounded-full shadow-[0_0_40px_rgba(244,63,94,0.6)] border-4 border-rose-300">HANGUSKAN SKOR <span id="se-team-name" class="underline decoration-4">TIM</span></button>
+        </div>
+    </div>
+</div>
+
 <main id="screen-setup" class="app-screen bg-pastel-gradient p-4 md:p-10 text-slate-800 overflow-y-auto">
     <div class="max-w-3xl mx-auto w-full">
         <div class="flex justify-between items-center mb-8 glass-card p-5 rounded-[2rem]">
@@ -327,7 +342,7 @@
             <div id="team-inputs-container" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </div>
 
-        <button onclick="playSound('click'); startGameSession()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold py-5 rounded-2xl shadow-[0_8px_30px_rgba(79,70,229,0.3)]">MULAI GAME SEKARANG</button>
+        <button onclick="playSound('click'); startGameSession()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold py-5 rounded-2xl shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:shadow-[0_10px_40px_rgba(79,70,229,0.4)]">MULAI GAME SEKARANG</button>
     </div>
 </main>
 
@@ -341,7 +356,7 @@
         </div>
         
         <div class="flex items-center gap-2">
-            <button onclick="playSound('click'); forceFinishGame()" class="btn bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-5 py-3 rounded-xl text-xs">🏁 AKHIRI PAKSA</button>
+            <button onclick="playSound('click'); forceFinishGame()" class="btn bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-5 py-3 rounded-xl text-xs transition-colors">🏁 AKHIRI PAKSA</button>
         </div>
     </div>
 
@@ -354,7 +369,7 @@
 
 <div id="modal-question" class="fixed inset-0 z-40 hidden flex items-center justify-center modal-overlay p-4">
     <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-5xl w-full flex flex-col min-h-[60vh] max-h-[95vh] overflow-hidden relative mx-auto">
-        <div id="q-special-banner" class="hidden bg-gradient-to-r from-orange-400 to-amber-400 text-white font-black text-center py-2 uppercase tracking-widest text-sm animate-pulse">🔥 KARTU SPESIAL 🔥</div>
+        <div id="q-special-banner" class="hidden bg-gradient-to-r from-orange-400 to-amber-400 text-white font-black text-center py-2 uppercase tracking-widest text-sm animate-pulse shadow-sm">🔥 KARTU SPESIAL 🔥</div>
         
         <div class="flex justify-between items-center bg-slate-50 p-6 border-b border-slate-100">
             <div id="q-modal-category" class="text-slate-600 font-black text-xl uppercase tracking-wider bg-white px-5 py-2 rounded-xl shadow-sm border border-slate-100">KATEGORI</div>
@@ -364,7 +379,7 @@
         <div class="flex-1 w-full overflow-y-auto p-6 md:p-12 bg-white flex flex-col items-center justify-center relative">
             <h2 id="q-modal-text" class="text-slate-800 font-black text-center text-3xl md:text-4xl leading-relaxed">Pertanyaan?</h2>
             
-            <div id="q-ans-box" class="hidden flex-col items-center w-full max-w-4xl bg-teal-50 p-8 rounded-[2rem] mt-10">
+            <div id="q-ans-box" class="hidden flex-col items-center w-full max-w-4xl bg-teal-50 p-8 rounded-[2rem] mt-10 shadow-inner">
                 <div class="text-teal-600 font-bold text-sm uppercase tracking-widest mb-2">JAWABAN BENAR</div>
                 <h2 id="q-modal-answer" class="text-teal-900 font-black text-center text-3xl">Jawaban</h2>
             </div>
@@ -379,17 +394,17 @@
             <div id="q-phase-validate" class="hidden w-full flex-col items-center bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 max-w-3xl mx-auto">
                 <div id="q-answering-team" class="text-2xl font-black text-slate-800 mb-6">TIM</div>
                 <div class="flex w-full gap-4">
-                    <button onclick="processAnswer(false)" class="btn flex-1 py-4 bg-rose-50 hover:bg-rose-100 text-rose-600 font-black text-xl rounded-xl">❌ SALAH</button>
-                    <button onclick="processAnswer(true)" class="btn flex-1 py-4 bg-teal-500 hover:bg-teal-600 text-white font-black text-xl rounded-xl shadow-md">✅ BENAR</button>
+                    <button onclick="processAnswer(false)" class="btn flex-1 py-4 bg-rose-50 hover:bg-rose-100 text-rose-600 font-black text-xl rounded-xl transition-colors">❌ SALAH</button>
+                    <button onclick="processAnswer(true)" class="btn flex-1 py-4 bg-teal-500 hover:bg-teal-600 text-white font-black text-xl rounded-xl shadow-md transition-all">✅ BENAR</button>
                 </div>
             </div>
 
             <div id="q-phase-finished" class="hidden flex-col items-center w-full">
-                <button onclick="playSound('click'); returnToBoard()" class="btn px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-lg shadow-md">KEMBALI KE PAPAN</button>
+                <button onclick="playSound('click'); returnToBoard()" class="btn px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-lg shadow-md transition-all">KEMBALI KE PAPAN GRID</button>
             </div>
             
             <div class="flex justify-between w-full mt-2">
-                <button onclick="playSound('click'); closeAndDiscardQuestion()" class="btn text-rose-300 hover:text-rose-500 text-xs font-bold transition-colors">Tutup & Hanguskan Soal</button>
+                <button onclick="playSound('click'); closeAndDiscardQuestion()" class="btn text-rose-300 hover:text-rose-500 text-xs font-bold transition-colors">Lewati & Hanguskan Soal</button>
                 <button onclick="playSound('click'); toggleAnswerReveal()" id="btn-toggle-ans" class="btn text-slate-400 hover:text-slate-600 text-sm font-bold transition-colors">👀 Tampilkan Jawaban</button>
             </div>
         </div>
@@ -398,26 +413,26 @@
 
 <main id="screen-result" class="app-screen bg-pastel-gradient items-center justify-center p-6 text-center">
     <div class="glass-card p-10 rounded-[3rem] w-full max-w-2xl flex flex-col items-center">
-        <div class="text-7xl mb-4 anim-bounce">🏆</div>
-        <h1 class="text-4xl font-black text-indigo-800 mb-8">HASIL AKHIR</h1>
+        <div class="text-7xl mb-4 anim-bounce drop-shadow-md">🏆</div>
+        <h1 class="text-4xl font-black text-indigo-800 mb-8 tracking-wide">HASIL AKHIR</h1>
         <div id="podium-list" class="w-full flex flex-col gap-3 mb-10 overflow-hidden px-2 py-4"></div>
-        <button onclick="playSound('click'); showScreen('screen-admin'); goAdmin('dash');" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-4 px-10 rounded-xl shadow-md">🏠 KEMBALI KE DASHBOARD</button>
+        <button onclick="playSound('click'); showScreen('screen-admin'); goAdmin('dash');" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-4 px-10 rounded-xl shadow-[0_8px_30px_rgba(79,70,229,0.3)]">🏠 KEMBALI KE DASHBOARD</button>
     </div>
 </main>
 
 <script>
     // ==========================================
-    // SYSTEM SOUND EFFECTS
+    // SYSTEM SOUND EFFECTS ENGINE
     // ==========================================
     const sounds = {
-        click: new Audio('https://actions.google.com/sounds/v1/ui/button_click.ogg'),
-        correct: new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg'),
-        wrong: new Audio('https://actions.google.com/sounds/v1/alarms/buzzer_alarm.ogg'),
-        zonk: new Audio('https://actions.google.com/sounds/v1/cartoon/slip_and_crash.ogg'),
-        bonus: new Audio('https://actions.google.com/sounds/v1/cartoon/magic_chime.ogg'),
-        win: new Audio('https://actions.google.com/sounds/v1/crowds/crowd_cheer.ogg')
+        click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'), // Modern Click
+        correct: new Audio('https://assets.mixkit.co/active_storage/sfx/952/952-preview.mp3'),   // Professional Correct Chime
+        wrong: new Audio('https://assets.mixkit.co/active_storage/sfx/946/946-preview.mp3'),     // Clear Buzzer Error
+        zonk: new Audio('https://assets.mixkit.co/active_storage/sfx/2024/2024-preview.mp3'),    // Dramatic Losing Piano
+        bonus: new Audio('https://assets.mixkit.co/active_storage/sfx/1936/1936-preview.mp3'),   // Magical Coin Reward
+        win: new Audio('https://assets.mixkit.co/active_storage/sfx/518/518-preview.mp3')        // Crowd Applause
     };
-    function playSound(type) { try { sounds[type].currentTime = 0; sounds[type].play().catch(e=>console.log(e)); } catch(e){} }
+    function playSound(type) { try { sounds[type].currentTime = 0; sounds[type].play().catch(e=>console.log("Audio play prevented:", e)); } catch(e){} }
 
     // ==========================================
     // LOGIKA FIREBASE
@@ -437,7 +452,7 @@
     const state = {
         user: null, classes: [], subjects: [], setup: { quizId: '', teamCount: 4, teams: [] },
         game: { sessionId: null, activeTeamId: null, teams: [], boardData: { categories: [], data: {} }, q: null },
-        loadedQuestions: {} // Untuk Edit Soal Cepat
+        loadedQuestions: {} // Caching untuk tombol edit cepat
     };
 
     function showToast(msg, type = 'info') {
@@ -514,14 +529,42 @@
         } catch(e) { showToast(e.message, "error"); }
     }
 
-    async function loadClasses() { /* Sama seperti versi sebelumnya */ }
-    async function saveClass() { /* Sama seperti versi sebelumnya */ }
-    async function deleteClass(id) { /* Sama seperti versi sebelumnya */ }
+    async function loadClasses() {
+        await fetchHierarchyData();
+        const cnt = { SD: 0, SMP: 0, SMA: 0, Umum: 0 };
+        const container = document.getElementById('class-list-container'); container.innerHTML = '';
+        if(state.classes.length === 0) { container.innerHTML = '<p class="text-slate-400 col-span-full">Belum ada data kelas.</p>'; }
+        state.classes.forEach(c => {
+            if(cnt[c.jenjang] !== undefined) cnt[c.jenjang]++;
+            container.innerHTML += `<div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center"><div><span class="text-[10px] font-black uppercase text-indigo-400 bg-indigo-50 px-2 py-0.5 rounded">${c.jenjang}</span><h3 class="font-black text-slate-800 text-lg mt-1">${c.name}</h3></div><button onclick="playSound('click'); deleteClass('${c.id}')" class="text-rose-400 hover:text-rose-600 text-xl">&times;</button></div>`;
+        });
+        document.getElementById('cnt-sd').innerText = cnt.SD; document.getElementById('cnt-smp').innerText = cnt.SMP;
+        document.getElementById('cnt-sma').innerText = cnt.SMA; document.getElementById('cnt-umum').innerText = cnt.Umum;
+    }
+    async function saveClass() {
+        const j = document.getElementById('ac-jenjang').value; const n = document.getElementById('ac-name').value.trim();
+        if(!j || !n) { showToast("Lengkapi form!", "error"); return; }
+        await db.collection('classes').add({ owner: state.user.licenseId, jenjang: j, name: n, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        closeModal('modal-add-class'); showToast("Kelas ditambahkan!", "success"); loadClasses();
+    }
+    async function deleteClass(id) { if(confirm("Hapus kelas ini?")) { await db.collection('classes').doc(id).delete(); loadClasses(); } }
     
-    async function loadSubjects() { /* Sama seperti versi sebelumnya */ }
-    function openAddSubjectModal() { /* Sama seperti versi sebelumnya */ }
-    async function saveSubject() { /* Sama seperti versi sebelumnya */ }
-    async function deleteSubject(id) { /* Sama seperti versi sebelumnya */ }
+    async function loadSubjects() {
+        await fetchHierarchyData(); const container = document.getElementById('subject-list-container'); container.innerHTML = '';
+        if(state.subjects.length === 0) { container.innerHTML = '<p class="text-slate-400 col-span-full">Belum ada data mapel.</p>'; return; }
+        state.subjects.forEach(s => {
+            const className = state.classes.find(x => x.id === s.classId)?.name || 'Unknown';
+            container.innerHTML += `<div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center"><div><span class="text-[10px] font-black uppercase text-indigo-400 bg-indigo-50 px-2 py-0.5 rounded">${s.jenjang} - ${className}</span><h3 class="font-black text-slate-800 text-lg mt-1">${s.name}</h3></div><button onclick="playSound('click'); deleteSubject('${s.id}')" class="text-rose-400 hover:text-rose-600 text-xl">&times;</button></div>`;
+        });
+    }
+    function openAddSubjectModal() { document.getElementById('as-jenjang').value = ""; document.getElementById('as-class').innerHTML = '<option value="">-- Pilih Kelas --</option>'; document.getElementById('as-name').value = ""; openModal('modal-add-subject'); }
+    async function saveSubject() {
+        const j = document.getElementById('as-jenjang').value; const c = document.getElementById('as-class').value; const n = document.getElementById('as-name').value.trim();
+        if(!j || !c || !n) { showToast("Lengkapi form!", "error"); return; }
+        await db.collection('subjects').add({ owner: state.user.licenseId, jenjang: j, classId: c, name: n, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        closeModal('modal-add-subject'); showToast("Mapel ditambahkan!", "success"); loadSubjects();
+    }
+    async function deleteSubject(id) { if(confirm("Hapus mapel ini?")) { await db.collection('subjects').doc(id).delete(); loadSubjects(); } }
 
     function updateClassDropdown(jId, cId) {
         const j = document.getElementById(jId).value; const sel = document.getElementById(cId);
@@ -546,8 +589,12 @@
         } catch(e) { showToast(e.message, "error"); }
     }
     function openCreateQuizModal() { document.getElementById('cq-jenjang').value = ""; document.getElementById('cq-class').innerHTML = '<option value="">Kelas</option>'; document.getElementById('cq-subject').innerHTML = '<option value="">Mapel</option>'; document.getElementById('cq-name').value = ""; openModal('modal-create-quiz'); }
-    async function saveQuiz() { /* Sama seperti versi sebelumnya */ }
-    async function deleteQuiz(id) { /* Sama seperti versi sebelumnya */ }
+    async function saveQuiz() {
+        const j = document.getElementById('cq-jenjang').value; const c = document.getElementById('cq-class').value; const s = document.getElementById('cq-subject').value; const n = document.getElementById('cq-name').value.trim();
+        if(!j || !c || !s || !n) { showToast("Pilih jenjang, kelas, mapel & nama paket!", "error"); return; }
+        try { await db.collection('quizzes').add({ owner: state.user.licenseId, jenjang: j, classId: c, subjectId: s, name: n, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); closeModal('modal-create-quiz'); showToast("Paket berhasil dibuat!", "success"); loadQuizzes(); } catch(e) { showToast(e.message, "error"); }
+    }
+    async function deleteQuiz(id) { if(confirm("Hapus paket soal ini beserta seluruh isinya?")) { await db.collection('quizzes').doc(id).delete(); showToast("Paket dihapus", "info"); loadQuizzes(); } }
 
     async function populateQuizSelects() {
         const snap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
@@ -558,7 +605,7 @@
     }
 
     // ==========================================
-    // MENU BANK SOAL (DENGAN TOMBOL EDIT)
+    // MENU BANK SOAL (FITUR TOMBOL EDIT DITAMBAHKAN)
     // ==========================================
     async function loadQuestions() {
         const quizId = document.getElementById('flt-bank-quiz').value;
@@ -570,12 +617,17 @@
             const snap = await ref.get(); tbody.innerHTML = '';
             if(snap.empty) { tbody.innerHTML = '<p class="text-slate-400 font-bold p-4">Tidak ada soal.</p>'; return; }
 
-            state.loadedQuestions = {}; // Reset state pencarian cepat
+            state.loadedQuestions = {}; // Reset cache memori
 
             snap.forEach(doc => {
                 const q = doc.data();
-                state.loadedQuestions[doc.id] = q; // Simpan di memori untuk tombol edit
-                const specialTag = q.sp && q.sp !== 'NORMAL' ? `<span class="ml-2 bg-orange-100 text-orange-600 px-2 py-0.5 rounded text-[9px]">${q.sp}</span>` : '';
+                state.loadedQuestions[doc.id] = q; // Simpan di memori untuk bisa di-edit
+                
+                let specialTag = '';
+                if(q.sp && q.sp !== 'NORMAL') {
+                    const tagColor = q.sp === 'ZONK' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600';
+                    specialTag = `<span class="ml-2 ${tagColor} px-2 py-0.5 rounded text-[9px]">${q.sp}</span>`;
+                }
                 
                 tbody.innerHTML += `
                     <div class="bg-white border border-slate-100 shadow-sm p-5 rounded-2xl flex justify-between items-start gap-4">
@@ -584,9 +636,9 @@
                             <p class="font-bold text-slate-700 text-base mt-3 leading-snug">${q.q}</p>
                             <p class="text-teal-600 font-bold text-sm mt-2 flex items-center gap-1"><span>↳</span> ${q.a}</p>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="playSound('click'); editQuestion('${doc.id}')" class="btn text-blue-400 hover:text-blue-600 bg-blue-50 hover:bg-blue-100 p-3 rounded-xl transition-colors">✏️</button>
-                            <button onclick="playSound('click'); deleteQuestion('${doc.id}')" class="btn text-rose-400 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 p-3 rounded-xl transition-colors">🗑️</button>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="playSound('click'); editQuestion('${doc.id}')" class="btn text-blue-500 hover:text-white hover:bg-blue-500 bg-blue-50 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">✏️ EDIT</button>
+                            <button onclick="playSound('click'); deleteQuestion('${doc.id}')" class="btn text-rose-500 hover:text-white hover:bg-rose-500 bg-rose-50 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm">🗑️ HAPUS</button>
                         </div>
                     </div>
                 `;
@@ -699,7 +751,7 @@
         const quizDoc = await db.collection('quizzes').doc(quizId).get();
         await db.collection('game_sessions').add({ userId: state.user.licenseId, quizName: quizDoc.exists ? quizDoc.data().name : 'Paket Kuis', teamsCount: teams.length, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
 
-        playSound('click'); buildBoard(); buildScoreboard(); showScreen('screen-board');
+        buildBoard(); buildScoreboard(); showScreen('screen-board');
     }
 
     function formatBoardData(qList) {
@@ -751,11 +803,28 @@
         const q = state.game.boardData.data[catName][qIndex];
         state.game.q = { cat: catName, idx: qIndex, data: q };
 
+        // DETEKSI LOGIKA SPECIAL CARDS (ZONK / BONUS) DENGAN FULL SCREEN EFFECT
+        if(q.sp === 'ZONK') {
+            playSpecialEffect('ZONK');
+            return; // Hentikan di sini, jangan buka modal pertanyaan biasa
+        } else if(q.sp === 'BONUS_X2' || q.sp === 'BONUS_X5') {
+            playSpecialEffect(q.sp);
+            // Modal full screen akan otomatis menutup dan lanjut ke showQuestionModal
+            return;
+        }
+
+        // Jika normal, langsung buka soal
+        showQuestionModal(q, catName);
+    }
+    
+    function showQuestionModal(q, catName) {
+        playSound('click');
+        
+        // Atur Banner Biasa di dalam modal soal (jika soalnya bekas Bonus)
         const banner = document.getElementById('q-special-banner');
-        if(q.sp === 'BONUS_X2') { banner.innerText = "🔥 BONUS POIN X2! 🔥"; banner.classList.remove('hidden'); playSound('bonus'); }
-        else if(q.sp === 'BONUS_X5') { banner.innerText = "🔥🔥 MEGA BONUS POIN X5! 🔥🔥"; banner.classList.remove('hidden'); playSound('bonus'); }
-        else if(q.sp === 'ZONK') { banner.innerText = "💣 AWAS ZONK! (SALAH = SKOR HANGUS) 💣"; banner.classList.remove('hidden'); playSound('zonk'); }
-        else { banner.classList.add('hidden'); playSound('click'); }
+        if(q.sp === 'BONUS_X2') { banner.innerText = "🔥 BONUS POIN X2! 🔥"; banner.classList.remove('hidden'); }
+        else if(q.sp === 'BONUS_X5') { banner.innerText = "🔥🔥 MEGA BONUS POIN X5! 🔥🔥"; banner.classList.remove('hidden'); }
+        else { banner.classList.add('hidden'); }
 
         document.getElementById('q-modal-category').innerText = catName;
         document.getElementById('q-modal-score').innerText = `${q.score} PTS`;
@@ -782,6 +851,65 @@
         openModal('modal-question');
     }
 
+    function playSpecialEffect(type) {
+        const modal = document.getElementById('modal-special-effect');
+        const content = document.getElementById('se-content');
+        const title = document.getElementById('se-title');
+        const icon = document.getElementById('se-icon');
+        const action = document.getElementById('se-action');
+        
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+        
+        // Trigger Pop Animation
+        content.classList.remove('scale-bounce');
+        void content.offsetWidth;
+        content.classList.add('scale-bounce');
+
+        if(type === 'ZONK') {
+            playSound('zonk');
+            icon.innerText = '💣';
+            title.innerText = 'AWAS ZONK!';
+            title.className = 'text-6xl md:text-8xl font-black text-rose-500 mb-6 tracking-widest drop-shadow-[0_0_20px_rgba(244,63,94,0.8)] text-center';
+            
+            const activeTeam = state.game.teams.find(t => t.id === state.game.activeTeamId);
+            document.getElementById('se-team-name').innerText = activeTeam.name;
+            action.classList.remove('hidden');
+            
+        } else {
+            playSound('bonus');
+            icon.innerText = '🎁';
+            title.innerText = type === 'BONUS_X2' ? 'BONUS X2!' : 'MEGA BONUS X5!';
+            title.className = 'text-6xl md:text-8xl font-black text-amber-400 mb-6 tracking-widest drop-shadow-[0_0_20px_rgba(251,191,36,0.8)] text-center leading-tight';
+            action.classList.add('hidden');
+            
+            confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+
+            // Auto close after 3.5 seconds and show the question
+            setTimeout(() => {
+                modal.classList.add('hidden'); modal.classList.remove('flex');
+                showQuestionModal(state.game.q.data, state.game.q.cat);
+            }, 3500);
+        }
+    }
+
+    function applyZonk() {
+        playSound('click');
+        const team = state.game.teams.find(t => t.id === state.game.activeTeamId);
+        team.score = 0; // Logika khusus: SKOR HANGUS
+        state.game.q.data.status = 'USED'; // Soal dianggap sudah dimainkan
+        
+        showToast(`💣 KENA ZONK! Skor ${team.name} Hangus (0)!`, 'error');
+        
+        // Ganti giliran ke tim selanjutnya
+        const currentIdx = state.game.teams.findIndex(t => t.id === state.game.activeTeamId);
+        state.game.activeTeamId = state.game.teams[(currentIdx + 1) % state.game.teams.length].id;
+        
+        // Tutup Modal Spesial dan kembali ke layar papan
+        document.getElementById('modal-special-effect').classList.add('hidden'); 
+        document.getElementById('modal-special-effect').classList.remove('flex');
+        returnToBoard(); 
+    }
+
     function processAnswer(isCorrect) {
         const qData = state.game.q.data;
         const team = state.game.teams.find(t => t.id === state.game.answeringTeamId);
@@ -793,16 +921,11 @@
             else if(qData.sp === 'BONUS_X5') { points *= 5; playSound('bonus'); msg = " (MEGA BONUS X5!)"; }
             else { playSound('correct'); }
             
-            team.score += points; qData.status = 'USED'; // Status hanya berubah digunakan jika soal berhasil dijawab
+            team.score += points; qData.status = 'USED'; 
             showToast(`✅ ${team.name} Benar +${points} PTS!${msg}`, 'success');
         } else {
-            if(qData.sp === 'ZONK') {
-                team.score = 0; playSound('zonk');
-                showToast(`💣 KENA ZONK! Skor ${team.name} Hangus (0)!`, 'error');
-            } else {
-                team.score -= points; playSound('wrong');
-                showToast(`❌ ${team.name} Salah -${points} PTS!`, 'error');
-            }
+            team.score -= points; playSound('wrong');
+            showToast(`❌ ${team.name} Salah -${points} PTS!`, 'error');
         }
 
         document.getElementById(`score-${team.id}`).innerText = team.score;
@@ -825,24 +948,40 @@
     function returnToBoard() {
         closeModal('modal-question');
         buildBoard();
+        buildScoreboard();
 
-        // Cek AUTO FINISH (Apakah semua soal sudah USED?)
+        // CEK AUTO FINISH GAME
         const b = state.game.boardData;
         let total = 0, used = 0;
         b.categories.forEach(c => { b.data[c].forEach(q => { if(q) { total++; if(q.status === 'USED') used++; } }); });
         
         if(total > 0 && used === total) {
-            setTimeout(() => forceFinishGame(), 1000); // Dramatis jeda 1 detik
+            // Jika semua soal sudah dijawab, akhiri otomatis dengan efek dramatis
+            setTimeout(() => forceFinishGame(), 1000); 
         }
     }
 
     function forceFinishGame() {
         playSound('win');
+        
+        // Hujan Confetti Meriah di layar akhir
+        const duration = 5 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 200 };
+        function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+        const interval = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) return clearInterval(interval);
+            const particleCount = 50 * (timeLeft / duration);
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+        }, 250);
+
         const sorted = [...state.game.teams].sort((a,b) => b.score - a.score);
         const podium = document.getElementById('podium-list'); podium.innerHTML = '';
         
         sorted.forEach((t, i) => {
-            let delay = i * 0.2; // Animasi masuk bergantian berdasar peringkat
+            let delay = i * 0.2; // Animasi muncul bergantian 
             podium.innerHTML += `
                 <div class="anim-slide-up flex justify-between items-center p-6 bg-white border border-slate-100 rounded-2xl shadow-md" style="animation-delay: ${delay}s">
                     <span class="font-black text-2xl ${i===0?'text-amber-500 text-3xl':'text-slate-600'}">#${i+1} ${t.name}</span>
