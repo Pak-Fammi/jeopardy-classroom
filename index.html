@@ -26,18 +26,21 @@
         .btn:active:not(:disabled) { transform: scale(0.97); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         
-        .admin-nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-radius: 16px; font-weight: 700; color: #64748b; transition: all 0.3s ease; }
+        .admin-nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-radius: 16px; font-weight: 700; color: #64748b; transition: all 0.3s ease; cursor: pointer; }
         .admin-nav-item:hover { background: #f8fafc; color: #475569; }
         .admin-nav-item.active { background: #e0e7ff; color: #4f46e5; box-shadow: 0 4px 14px -4px rgba(79, 70, 229, 0.2); }
         
-        /* Styling Game Board Tetap Dipertahankan */
+        /* Game Board */
         .cat-header { background: linear-gradient(135deg, #fde047 0%, #fcd34d 100%); color: #78350f; font-weight: 900; font-size: clamp(14px, 1.5vw, 18px); min-height: 60px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 4px; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .jeopardy-grid { display: grid; gap: 0.75rem; width: 100%; grid-template-columns: repeat(var(--cat-count, 5), minmax(0, 1fr)); }
         .team-active { border-color: #60a5fa !important; box-shadow: 0 0 25px rgba(96, 165, 250, 0.4); transform: scale(1.05); background: #eff6ff !important; z-index: 10; }
 
         @keyframes bounceIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .anim-bounce { animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .modal-overlay { background: rgba(15, 23, 42, 0.3); backdrop-filter: blur(4px); }
+        .modal-overlay { background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(5px); }
+        
+        /* SVG Icons Styling */
+        .svg-icon { width: 24px; height: 24px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     </style>
 </head>
 <body>
@@ -47,9 +50,9 @@
 <main id="screen-cover" class="app-screen active items-center justify-center bg-pastel-gradient relative overflow-hidden">
     <div class="z-10 text-center px-4 flex flex-col items-center w-full max-w-3xl mx-auto">
         <div class="glass-card p-14 rounded-[3rem] w-full flex flex-col items-center">
-            <div class="text-7xl mb-6 anim-bounce drop-shadow-md">🎮</div>
+            <svg class="w-20 h-20 mb-6 text-indigo-500 anim-bounce drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <h1 class="text-5xl md:text-7xl font-black text-slate-800 mb-3 tracking-tight">JEOPARDY</h1>
-            <h2 class="text-lg md:text-xl font-bold text-indigo-500 tracking-widest mb-10 uppercase bg-indigo-50 px-6 py-2 rounded-full">Classroom Edition</h2>
+            <h2 class="text-lg md:text-xl font-bold text-indigo-500 tracking-widest mb-10 uppercase bg-indigo-50 px-6 py-2 rounded-full border border-indigo-100">Classroom Edition</h2>
             <button onclick="showScreen('modal-login')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold py-4 px-12 rounded-full shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:shadow-[0_10px_40px_rgba(79,70,229,0.4)]">MULAI SEKARANG</button>
         </div>
     </div>
@@ -58,7 +61,7 @@
 <main id="modal-login" class="app-screen items-center justify-center bg-pastel-gradient p-4">
     <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md p-10 relative anim-bounce text-center border border-slate-100">
         <button onclick="showScreen('screen-cover')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 font-bold text-2xl w-10 h-10 rounded-full flex items-center justify-center bg-slate-50 hover:bg-slate-100 transition-colors">&times;</button>
-        <div class="text-5xl mb-6">🔐</div>
+        <svg class="w-16 h-16 mx-auto mb-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
         <h2 class="text-3xl font-black text-slate-800 mb-2">Akses Guru</h2>
         <p class="text-slate-500 font-semibold text-sm mb-8">Masukkan lisensi akses Anda untuk mengelola kelas.</p>
         <input type="password" id="input-access-code" placeholder="Kode Akses..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-center text-2xl font-bold rounded-2xl focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 block p-4 outline-none mb-8 transition-all">
@@ -69,7 +72,8 @@
 <main id="screen-admin" class="app-screen bg-slate-50 flex-row">
     <aside class="w-72 bg-white border-r border-slate-100 hidden md:flex flex-col p-6 shrink-0 z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
         <div class="text-indigo-600 font-black text-3xl mb-8 flex items-center gap-3 tracking-tight">
-            <span>🎮</span> Jeopardy
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Jeopardy
         </div>
         
         <div class="mb-8 bg-gradient-to-br from-indigo-50 to-blue-50 p-4 rounded-2xl border border-indigo-100/50 flex flex-col items-start gap-1">
@@ -79,51 +83,78 @@
         </div>
         
         <nav class="flex-1 flex flex-col gap-2">
-            <a onclick="goAdmin('dash')" id="nav-dash" class="admin-nav-item active"><span class="text-xl w-6">🏠</span> Dashboard</a>
-            <a onclick="goAdmin('class')" id="nav-class" class="admin-nav-item"><span class="text-xl w-6">🏫</span> Kelola Kelas</a>
-            <a onclick="goAdmin('subject')" id="nav-subject" class="admin-nav-item"><span class="text-xl w-6">📖</span> Kelola Mapel</a>
-            <a onclick="goAdmin('quiz')" id="nav-quiz" class="admin-nav-item"><span class="text-xl w-6">📦</span> Paket Soal</a>
-            <a onclick="goAdmin('bank')" id="nav-bank" class="admin-nav-item"><span class="text-xl w-6">✏️</span> Tambah Soal</a>
-            <a onclick="goAdmin('import')" id="nav-import" class="admin-nav-item"><span class="text-xl w-6">📥</span> Import Soal</a>
+            <a onclick="goAdmin('dash')" id="nav-dash" class="admin-nav-item active">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Dashboard
+            </a>
+            <a onclick="goAdmin('class')" id="nav-class" class="admin-nav-item">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                Kelola Kelas
+            </a>
+            <a onclick="goAdmin('subject')" id="nav-subject" class="admin-nav-item">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                Kelola Mapel
+            </a>
+            <a onclick="goAdmin('quiz')" id="nav-quiz" class="admin-nav-item">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                Paket Soal
+            </a>
+            <a onclick="goAdmin('bank')" id="nav-bank" class="admin-nav-item">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                Tambah Soal
+            </a>
+            <a onclick="goAdmin('import')" id="nav-import" class="admin-nav-item">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                Import Soal
+            </a>
             
             <div class="my-4 border-t border-slate-100"></div>
             
             <a onclick="showScreen('screen-setup'); initSetup();" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-4 rounded-2xl text-center flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all">
-                <span class="text-lg">▶</span> MULAI GAME
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg>
+                MULAI GAME
             </a>
         </nav>
         
         <button onclick="logout()" class="mt-6 text-slate-400 font-bold text-sm py-3 rounded-xl hover:bg-rose-50 hover:text-rose-500 transition-colors flex justify-center items-center gap-2">
-            <span>🚪</span> Keluar Akun
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            Keluar Akun
         </button>
     </aside>
 
     <div class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50/50">
+        
         <div id="admin-sub-dash" class="flex-1 flex flex-col overflow-y-auto p-6 md:p-10">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
                 <div>
                     <h1 class="text-3xl md:text-4xl font-black text-slate-800 mb-2">Dashboard</h1>
-                    <p class="text-slate-500 font-semibold">Kelola kuis dan pantau permainan Jeopardy kelas Anda.</p>
+                    <p class="text-slate-500 font-semibold">Pantau aktivitas permainan Jeopardy kelas Anda.</p>
                 </div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-row items-center gap-5 hover:shadow-md transition-shadow">
-                    <div class="text-4xl bg-indigo-50 w-16 h-16 rounded-2xl flex items-center justify-center text-indigo-600">📦</div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-row items-center gap-5 hover:shadow-md transition-shadow cursor-pointer" onclick="goAdmin('quiz')">
+                    <div class="text-4xl bg-indigo-50 w-16 h-16 rounded-2xl flex items-center justify-center text-indigo-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    </div>
                     <div>
                         <div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Paket Soal</div>
                         <div class="text-slate-800 font-black text-3xl" id="dash-count-qz">0</div>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-row items-center gap-5 hover:shadow-md transition-shadow">
-                    <div class="text-4xl bg-teal-50 w-16 h-16 rounded-2xl flex items-center justify-center text-teal-600">✏️</div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-row items-center gap-5 hover:shadow-md transition-shadow cursor-pointer" onclick="goAdmin('bank')">
+                    <div class="text-4xl bg-teal-50 w-16 h-16 rounded-2xl flex items-center justify-center text-teal-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </div>
                     <div>
                         <div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Total Soal</div>
                         <div class="text-slate-800 font-black text-3xl" id="dash-count-qs">0</div>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-row items-center gap-5 hover:shadow-md transition-shadow">
-                    <div class="text-4xl bg-purple-50 w-16 h-16 rounded-2xl flex items-center justify-center text-purple-600">🎮</div>
+                    <div class="text-4xl bg-purple-50 w-16 h-16 rounded-2xl flex items-center justify-center text-purple-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
                     <div>
                         <div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Sesi Dimainkan</div>
                         <div class="text-slate-800 font-black text-3xl" id="dash-count-gm">0</div>
@@ -142,34 +173,43 @@
         </div>
 
         <div id="admin-sub-class" class="hidden flex-1 flex-col overflow-hidden p-6 md:p-10">
-            <h2 class="text-3xl font-black text-slate-800 mb-2">🏫 Kelola Kelas</h2>
-            <p class="text-slate-500 font-semibold mb-8">Manajemen data kelas untuk sesi permainan.</p>
-            <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 flex-1 flex flex-col items-center justify-center text-center">
-                <div class="text-6xl mb-4 opacity-50">🚧</div>
-                <h3 class="text-xl font-bold text-slate-700">Fitur Segera Hadir</h3>
-                <p class="text-slate-500 mt-2 max-w-md">Modul Kelola Kelas sedang dalam tahap pengembangan untuk versi Firebase ini.</p>
+            <div class="flex justify-between items-center mb-8 shrink-0 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-1">🏫 Kelola Kelas</h2>
+                    <p class="text-slate-500 font-semibold">Data kelas dari berbagai jenjang.</p>
+                </div>
+                <button onclick="openModal('modal-add-class')" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-md">+ Tambah Kelas</button>
             </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 shrink-0">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 text-center"><div class="text-indigo-600 font-black text-3xl" id="cnt-sd">0</div><div class="text-slate-400 font-bold text-xs uppercase mt-1">SD</div></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 text-center"><div class="text-indigo-600 font-black text-3xl" id="cnt-smp">0</div><div class="text-slate-400 font-bold text-xs uppercase mt-1">SMP</div></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 text-center"><div class="text-indigo-600 font-black text-3xl" id="cnt-sma">0</div><div class="text-slate-400 font-bold text-xs uppercase mt-1">SMA</div></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 text-center"><div class="text-indigo-600 font-black text-3xl" id="cnt-umum">0</div><div class="text-slate-400 font-bold text-xs uppercase mt-1">Umum</div></div>
+            </div>
+            <div id="class-list-container" class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start pb-10"></div>
         </div>
 
         <div id="admin-sub-subject" class="hidden flex-1 flex-col overflow-hidden p-6 md:p-10">
-            <h2 class="text-3xl font-black text-slate-800 mb-2">📖 Kelola Mata Pelajaran</h2>
-            <p class="text-slate-500 font-semibold mb-8">Manajemen data mata pelajaran.</p>
-            <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 flex-1 flex flex-col items-center justify-center text-center">
-                <div class="text-6xl mb-4 opacity-50">🚧</div>
-                <h3 class="text-xl font-bold text-slate-700">Fitur Segera Hadir</h3>
-                <p class="text-slate-500 mt-2 max-w-md">Modul Kelola Mapel sedang dalam tahap sinkronisasi dengan database Firestore.</p>
+            <div class="flex justify-between items-center mb-8 shrink-0 flex-wrap gap-4">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-1">📖 Kelola Mapel</h2>
+                    <p class="text-slate-500 font-semibold">Manajemen data mata pelajaran per kelas.</p>
+                </div>
+                <button onclick="openAddSubjectModal()" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-md">+ Tambah Mapel</button>
             </div>
+            <div id="subject-list-container" class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start pb-10"></div>
         </div>
 
         <div id="admin-sub-quiz" class="hidden flex-1 flex-col overflow-hidden p-6 md:p-10">
-            <div class="flex justify-between items-center mb-8 shrink-0">
+            <div class="flex justify-between items-center mb-8 shrink-0 flex-wrap gap-4">
                 <div>
                     <h2 class="text-3xl font-black text-slate-800 mb-1">📦 Paket Soal</h2>
                     <p class="text-slate-500 font-semibold">Kelola kumpulan kuis Anda.</p>
                 </div>
                 <button onclick="openCreateQuizModal()" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-md">+ Paket Baru</button>
             </div>
-            <div id="quiz-list-container" class="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-2 gap-5 content-start pb-10"></div>
+            <div id="quiz-list-container" class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-5 content-start pb-10"></div>
         </div>
 
         <div id="admin-sub-bank" class="hidden flex-1 flex-col overflow-hidden p-6 md:p-10">
@@ -212,31 +252,63 @@
     </div>
 </main>
 
-<div id="modal-create-quiz" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay p-4">
-    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg p-8 relative border border-slate-100">
+<div id="modal-add-class" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 relative border border-slate-100 mx-auto">
+        <button onclick="closeModal('modal-add-class')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl transition-colors">&times;</button>
+        <h2 class="text-2xl font-black text-slate-800 mb-6">🏫 Tambah Kelas</h2>
+        <div class="space-y-4">
+            <select id="ac-jenjang" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 p-4 rounded-xl font-bold outline-none transition-colors">
+                <option value="">-- Pilih Jenjang --</option>
+                <option value="SD">SD</option><option value="SMP">SMP</option><option value="SMA">SMA</option><option value="Umum">Umum</option>
+            </select>
+            <input type="text" id="ac-name" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 p-4 rounded-xl font-bold text-lg outline-none transition-colors" placeholder="Nama Kelas (Cth: Kelas 7A)">
+        </div>
+        <button onclick="saveClass()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl mt-8 shadow-md">SIMPAN KELAS</button>
+    </div>
+</div>
+
+<div id="modal-add-subject" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 relative border border-slate-100 mx-auto">
+        <button onclick="closeModal('modal-add-subject')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl transition-colors">&times;</button>
+        <h2 class="text-2xl font-black text-slate-800 mb-6">📖 Tambah Mapel</h2>
+        <div class="space-y-4">
+            <select id="as-jenjang" onchange="updateClassDropdown('as-jenjang', 'as-class')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 p-3 rounded-xl font-bold outline-none transition-colors"><option value="">-- Pilih Jenjang --</option><option value="SD">SD</option><option value="SMP">SMP</option><option value="SMA">SMA</option><option value="Umum">Umum</option></select>
+            <select id="as-class" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 p-3 rounded-xl font-bold outline-none transition-colors"><option value="">-- Pilih Kelas --</option></select>
+            <input type="text" id="as-name" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 p-4 rounded-xl font-bold text-lg outline-none transition-colors" placeholder="Nama Mapel (Cth: Matematika)">
+        </div>
+        <button onclick="saveSubject()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl mt-8 shadow-md">SIMPAN MAPEL</button>
+    </div>
+</div>
+
+<div id="modal-create-quiz" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg p-8 relative border border-slate-100 mx-auto">
         <button onclick="closeModal('modal-create-quiz')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl transition-colors">&times;</button>
         <h2 class="text-2xl font-black text-slate-800 mb-6">📦 Buat Paket Baru</h2>
         <div class="space-y-4">
-            <input type="text" id="cq-name" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 focus:bg-white text-slate-800 p-4 rounded-xl font-bold text-lg outline-none transition-colors" placeholder="Judul Paket Soal (Cth: IPA Kelas 8)">
-            <input type="text" id="cq-desc" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 focus:bg-white text-slate-600 p-3 rounded-xl outline-none font-semibold transition-colors" placeholder="Deskripsi Singkat (Opsional)">
+            <div class="grid grid-cols-2 gap-3">
+                <select id="cq-jenjang" onchange="updateClassDropdown('cq-jenjang', 'cq-class')" class="w-full bg-slate-50 border border-slate-200 text-slate-800 p-3 rounded-xl font-bold outline-none"><option value="">Jenjang</option><option value="SD">SD</option><option value="SMP">SMP</option><option value="SMA">SMA</option><option value="Umum">Umum</option></select>
+                <select id="cq-class" onchange="updateSubjectDropdown('cq-class', 'cq-subject')" class="w-full bg-slate-50 border border-slate-200 text-slate-800 p-3 rounded-xl font-bold outline-none"><option value="">Kelas</option></select>
+            </div>
+            <select id="cq-subject" class="w-full bg-slate-50 border border-slate-200 text-slate-800 p-3 rounded-xl font-bold outline-none"><option value="">Mapel</option></select>
+            <input type="text" id="cq-name" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 p-4 rounded-xl font-black text-lg outline-none" placeholder="Judul Paket (Cth: Kuis Semester 1)">
         </div>
         <button id="btn-save-quiz" onclick="saveQuiz()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl mt-8 shadow-md">SIMPAN PAKET</button>
     </div>
 </div>
 
-<div id="modal-edit-question" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay p-4">
-    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl p-8 relative flex flex-col max-h-[90vh] border border-slate-100">
+<div id="modal-edit-question" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl p-8 relative flex flex-col max-h-[90vh] border border-slate-100 mx-auto">
         <button onclick="closeModal('modal-edit-question')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl transition-colors">&times;</button>
         <h2 id="modal-q-title" class="text-2xl font-black text-slate-800 mb-6">📝 Form Soal</h2>
         <input type="hidden" id="eq-id">
-        <div class="flex-1 overflow-y-auto space-y-5 pr-2 custom-scroll">
+        <div class="flex-1 overflow-y-auto space-y-5 pr-2">
             <div>
                 <label class="text-xs text-slate-400 font-bold block mb-2 uppercase tracking-wide">Paket Soal Tujuan</label>
                 <select id="eq-quiz" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 p-3 rounded-xl font-bold outline-none transition-colors"></select>
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="text-xs text-slate-400 font-bold block mb-2 uppercase tracking-wide">Kategori (Judul Kolom Grid)</label>
+                    <label class="text-xs text-slate-400 font-bold block mb-2 uppercase tracking-wide">Kategori Kolom</label>
                     <input type="text" id="eq-cat" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 p-3 rounded-xl font-black uppercase text-center transition-colors" placeholder="Cth: VERB">
                 </div>
                 <div>
@@ -315,8 +387,8 @@
     <div id="board-teams" class="mt-3 grid gap-3 shrink-0" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));"></div>
 </main>
 
-<div id="modal-question" class="fixed inset-0 z-40 hidden items-center justify-center modal-overlay p-4">
-    <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-5xl w-full flex flex-col min-h-[60vh] max-h-[95vh] overflow-hidden relative">
+<div id="modal-question" class="fixed inset-0 z-40 hidden flex items-center justify-center modal-overlay p-4">
+    <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-5xl w-full flex flex-col min-h-[60vh] max-h-[95vh] overflow-hidden relative mx-auto">
         <div class="flex justify-between items-center bg-slate-50 p-6 border-b border-slate-100">
             <div id="q-modal-category" class="text-slate-600 font-black text-xl uppercase tracking-wider bg-white px-5 py-2 rounded-xl shadow-sm border border-slate-100">KATEGORI</div>
             <div id="q-modal-score" class="text-xl font-black text-indigo-600 bg-indigo-50 px-5 py-2 rounded-xl">10 PTS</div>
@@ -365,7 +437,7 @@
 
 <script>
     // ==========================================
-    // LOGIKA SISTEM (TIDAK ADA YANG DIUBAH)
+    // LOGIKA FIREBASE & DATABASE
     // ==========================================
     const firebaseConfig = {
         apiKey: "AIzaSyAuFGbtry9REYNNtdSCM-HuB0jTvGOXBzA",
@@ -381,6 +453,8 @@
 
     const state = {
         user: null,
+        classes: [],
+        subjects: [],
         setup: { quizId: '', teamCount: 4, teams: [] },
         game: { sessionId: null, activeTeamId: null, teams: [], boardData: { categories: [], data: {} }, q: null }
     };
@@ -398,8 +472,8 @@
         const el = document.getElementById(id); if(el) el.classList.add('active');
     }
 
-    function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
-    function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); document.getElementById(id)?.classList.remove('flex'); }
+    function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); document.getElementById(id)?.classList.add('flex'); }
 
     async function submitLogin() {
         const code = document.getElementById('input-access-code').value.trim();
@@ -417,6 +491,7 @@
             state.user = { licenseId: doc.id, customerName: data.customerName, plan: data.plan };
             sessionStorage.setItem('j_user', JSON.stringify(state.user));
             closeModal('modal-login');
+            fetchHierarchyData();
             goAdmin('dash');
         } catch(e) { showToast(e.message, "error"); }
     }
@@ -425,37 +500,44 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         const u = sessionStorage.getItem('j_user');
-        if(u) { state.user = JSON.parse(u); goAdmin('dash'); }
+        if(u) { state.user = JSON.parse(u); fetchHierarchyData(); goAdmin('dash'); }
     });
 
-    // UPDATED NAVIGATION LOGIC UNTUK MENU BARU
+    async function fetchHierarchyData() {
+        if(!state.user) return;
+        const clSnap = await db.collection('classes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
+        state.classes = clSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        
+        const sjSnap = await db.collection('subjects').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
+        state.subjects = sjSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+
+    // UPDATED NAVIGATION
     function goAdmin(subId) {
         if(!state.user) { showScreen('screen-cover'); return; }
         
         document.getElementById('admin-user-name').innerText = state.user.customerName;
         document.getElementById('admin-user-plan').innerText = state.user.plan || 'MEMBER';
-        
         showScreen('screen-admin');
         
-        // Hide all sub-screens
         document.querySelectorAll('[id^="admin-sub-"]').forEach(el => el.classList.add('hidden'));
-        // Remove active state from all nav items
         document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
         
-        // Show selected sub-screen
         const activeSub = document.getElementById(`admin-sub-${subId}`);
         if(activeSub) activeSub.classList.remove('hidden');
-        
-        // Highlight selected nav item
         const activeNav = document.getElementById(`nav-${subId}`);
         if(activeNav) activeNav.classList.add('active');
 
-        // Trigger loading logic based on screen
         if(subId === 'dash') loadDashboard();
+        if(subId === 'class') loadClasses();
+        if(subId === 'subject') loadSubjects();
         if(subId === 'quiz') loadQuizzes();
         if(subId === 'bank' || subId === 'import') populateQuizSelects();
     }
 
+    // ==========================================
+    // MENU 1: DASHBOARD
+    // ==========================================
     async function loadDashboard() {
         try {
             const qzSnap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
@@ -469,10 +551,7 @@
             const recentContainer = document.getElementById('dash-recent-games');
             recentContainer.innerHTML = '';
 
-            if(gmSnap.empty) {
-                recentContainer.innerHTML = '<p class="text-slate-400 font-medium text-center py-6">Belum ada riwayat permainan.</p>';
-                return;
-            }
+            if(gmSnap.empty) { recentContainer.innerHTML = '<p class="text-slate-400 font-medium text-center py-6">Belum ada riwayat permainan.</p>'; return; }
 
             gmSnap.docs.slice(0, 5).forEach(doc => {
                 const g = doc.data();
@@ -489,22 +568,144 @@
         } catch(e) { showToast(e.message, "error"); }
     }
 
+    // ==========================================
+    // MENU 2: KELOLA KELAS
+    // ==========================================
+    async function loadClasses() {
+        await fetchHierarchyData();
+        const cnt = { SD: 0, SMP: 0, SMA: 0, Umum: 0 };
+        const container = document.getElementById('class-list-container');
+        container.innerHTML = '';
+        
+        if(state.classes.length === 0) { container.innerHTML = '<p class="text-slate-400 col-span-full">Belum ada data kelas.</p>'; }
+        
+        state.classes.forEach(c => {
+            if(cnt[c.jenjang] !== undefined) cnt[c.jenjang]++;
+            container.innerHTML += `
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] font-black uppercase text-indigo-400 bg-indigo-50 px-2 py-0.5 rounded">${c.jenjang}</span>
+                        <h3 class="font-black text-slate-800 text-lg mt-1">${c.name}</h3>
+                    </div>
+                    <button onclick="deleteClass('${c.id}')" class="text-rose-400 hover:text-rose-600 text-xl">&times;</button>
+                </div>`;
+        });
+
+        document.getElementById('cnt-sd').innerText = cnt.SD;
+        document.getElementById('cnt-smp').innerText = cnt.SMP;
+        document.getElementById('cnt-sma').innerText = cnt.SMA;
+        document.getElementById('cnt-umum').innerText = cnt.Umum;
+    }
+
+    async function saveClass() {
+        const j = document.getElementById('ac-jenjang').value;
+        const n = document.getElementById('ac-name').value.trim();
+        if(!j || !n) { showToast("Lengkapi form!", "error"); return; }
+        
+        await db.collection('classes').add({ owner: state.user.licenseId, jenjang: j, name: n, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        closeModal('modal-add-class');
+        showToast("Kelas ditambahkan!", "success");
+        loadClasses();
+    }
+
+    async function deleteClass(id) {
+        if(confirm("Hapus kelas ini?")) {
+            await db.collection('classes').doc(id).delete();
+            loadClasses();
+        }
+    }
+
+    // ==========================================
+    // MENU 3: KELOLA MAPEL
+    // ==========================================
+    async function loadSubjects() {
+        await fetchHierarchyData();
+        const container = document.getElementById('subject-list-container');
+        container.innerHTML = '';
+        if(state.subjects.length === 0) { container.innerHTML = '<p class="text-slate-400 col-span-full">Belum ada data mapel.</p>'; return; }
+
+        state.subjects.forEach(s => {
+            const cls = state.classes.find(x => x.id === s.classId);
+            const className = cls ? cls.name : 'Unknown';
+            container.innerHTML += `
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] font-black uppercase text-indigo-400 bg-indigo-50 px-2 py-0.5 rounded">${s.jenjang} - ${className}</span>
+                        <h3 class="font-black text-slate-800 text-lg mt-1">${s.name}</h3>
+                    </div>
+                    <button onclick="deleteSubject('${s.id}')" class="text-rose-400 hover:text-rose-600 text-xl">&times;</button>
+                </div>`;
+        });
+    }
+
+    function openAddSubjectModal() {
+        document.getElementById('as-jenjang').value = "";
+        document.getElementById('as-class').innerHTML = '<option value="">-- Pilih Kelas --</option>';
+        document.getElementById('as-name').value = "";
+        openModal('modal-add-subject');
+    }
+
+    async function saveSubject() {
+        const j = document.getElementById('as-jenjang').value;
+        const c = document.getElementById('as-class').value;
+        const n = document.getElementById('as-name').value.trim();
+        if(!j || !c || !n) { showToast("Lengkapi form!", "error"); return; }
+        
+        await db.collection('subjects').add({ owner: state.user.licenseId, jenjang: j, classId: c, name: n, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        closeModal('modal-add-subject');
+        showToast("Mapel ditambahkan!", "success");
+        loadSubjects();
+    }
+
+    async function deleteSubject(id) {
+        if(confirm("Hapus mapel ini?")) {
+            await db.collection('subjects').doc(id).delete();
+            loadSubjects();
+        }
+    }
+
+    // ==========================================
+    // UTILS DROPDOWN CASCADING
+    // ==========================================
+    function updateClassDropdown(jId, cId) {
+        const jenjang = document.getElementById(jId).value;
+        const sel = document.getElementById(cId);
+        sel.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+        state.classes.filter(x => x.jenjang === jenjang).forEach(c => {
+            sel.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+        });
+    }
+
+    function updateSubjectDropdown(cId, sId) {
+        const cVal = document.getElementById(cId).value;
+        const sel = document.getElementById(sId);
+        sel.innerHTML = '<option value="">-- Pilih Mapel --</option>';
+        state.subjects.filter(x => x.classId === cVal).forEach(s => {
+            sel.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+        });
+    }
+
+    // ==========================================
+    // MENU 4: PAKET SOAL (QUIZ)
+    // ==========================================
     async function loadQuizzes() {
         const container = document.getElementById('quiz-list-container');
-        container.innerHTML = '<p class="text-slate-400 font-bold">Memuat paket soal...</p>';
+        container.innerHTML = '<p class="text-slate-400 font-bold col-span-full">Memuat paket soal...</p>';
         try {
             const snap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
             container.innerHTML = '';
-            
-            if(snap.empty) { container.innerHTML = '<p class="text-slate-400 font-bold">Belum ada paket soal.</p>'; return; }
+            if(snap.empty) { container.innerHTML = '<p class="text-slate-400 font-bold col-span-full">Belum ada paket soal.</p>'; return; }
             
             snap.forEach(doc => {
                 const q = doc.data();
+                const cls = state.classes.find(x => x.id === q.classId)?.name || 'Umum';
+                const subj = state.subjects.find(x => x.id === q.subjectId)?.name || 'Bebas';
+
                 container.innerHTML += `
                     <div class="bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
                         <div>
-                            <h3 class="font-black text-slate-800 text-xl mb-1">${q.name}</h3>
-                            <p class="text-sm text-slate-500 font-semibold mb-6 line-clamp-2">${q.desc || 'Tanpa deskripsi'}</p>
+                            <span class="text-[10px] font-black uppercase text-indigo-400 mb-2 block">${q.jenjang||'-'} • ${cls} • ${subj}</span>
+                            <h3 class="font-black text-slate-800 text-xl mb-6">${q.name}</h3>
                         </div>
                         <button onclick="deleteQuiz('${doc.id}')" class="btn self-start text-rose-400 hover:text-rose-600 font-bold text-sm transition-colors">Hapus Paket</button>
                     </div>
@@ -513,16 +714,25 @@
         } catch(e) { showToast(e.message, "error"); }
     }
 
-    async function openCreateQuizModal() { openModal('modal-create-quiz'); }
+    async function openCreateQuizModal() {
+        document.getElementById('cq-jenjang').value = "";
+        document.getElementById('cq-class').innerHTML = '<option value="">Kelas</option>';
+        document.getElementById('cq-subject').innerHTML = '<option value="">Mapel</option>';
+        document.getElementById('cq-name').value = "";
+        openModal('modal-create-quiz');
+    }
     
     async function saveQuiz() {
-        const name = document.getElementById('cq-name').value.trim();
-        const desc = document.getElementById('cq-desc').value.trim();
-        if(!name) { showToast("Isi nama paket!", "error"); return; }
+        const j = document.getElementById('cq-jenjang').value;
+        const c = document.getElementById('cq-class').value;
+        const s = document.getElementById('cq-subject').value;
+        const n = document.getElementById('cq-name').value.trim();
+        
+        if(!j || !c || !s || !n) { showToast("Pilih jenjang, kelas, mapel & nama paket!", "error"); return; }
 
         try {
             await db.collection('quizzes').add({
-                owner: state.user.licenseId, name: name, desc: desc, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                owner: state.user.licenseId, jenjang: j, classId: c, subjectId: s, name: n, createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             closeModal('modal-create-quiz');
             showToast("Paket berhasil dibuat!", "success");
@@ -538,15 +748,16 @@
         }
     }
 
+    // ==========================================
+    // MENU 5 & 6: BANK SOAL & IMPORT
+    // ==========================================
     async function populateQuizSelects() {
         const snap = await db.collection('quizzes').where('owner', 'in', [state.user.licenseId, 'SYSTEM']).get();
         ['flt-bank-quiz', 'eq-quiz', 'imp-quiz', 'sg-quiz'].forEach(selectId => {
             const el = document.getElementById(selectId);
             if(!el) return;
-            el.innerHTML = '<option value="">Pilih Paket...</option>';
-            snap.forEach(doc => {
-                el.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
-            });
+            el.innerHTML = '<option value="">Pilih Paket Kuis...</option>';
+            snap.forEach(doc => { el.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`; });
         });
     }
 
@@ -558,11 +769,9 @@
         try {
             let ref = db.collection('questions').where('owner', 'in', [state.user.licenseId, 'SYSTEM']);
             if(quizId) ref = ref.where('quizId', '==', quizId);
-            
             const snap = await ref.get();
             tbody.innerHTML = '';
-
-            if(snap.empty) { tbody.innerHTML = '<p class="text-slate-400 font-bold p-4">Tidak ada soal dalam paket ini.</p>'; return; }
+            if(snap.empty) { tbody.innerHTML = '<p class="text-slate-400 font-bold p-4">Tidak ada soal.</p>'; return; }
 
             snap.forEach(doc => {
                 const q = doc.data();
@@ -597,11 +806,8 @@
         const sp = document.getElementById('eq-sp').value;
 
         if(!quizId || !cat || !q || !a) { showToast("Lengkapi semua isian!", "error"); return; }
-
         try {
-            await db.collection('questions').add({
-                owner: state.user.licenseId, quizId: quizId, cat: cat, score: score, q: q, a: a, sp: sp
-            });
+            await db.collection('questions').add({ owner: state.user.licenseId, quizId: quizId, cat: cat, score: score, q: q, a: a, sp: sp });
             closeModal('modal-edit-question');
             showToast("Soal berhasil disimpan!", "success");
             loadQuestions();
@@ -618,14 +824,11 @@
     function previewImport() {
         const text = document.getElementById('imp-text').value.trim();
         if(!text) return;
-
         parsedImportItems = [];
         text.split('\n').forEach(line => {
             const cols = line.split('\t').length >= 4 ? line.split('\t') : line.split('|');
             if(cols.length >= 4) {
-                parsedImportItems.push({
-                    cat: cols[0].trim().toUpperCase(), score: parseInt(cols[1])||10, q: cols[2].trim(), a: cols[3].trim(), sp: cols[4] ? cols[4].trim().toUpperCase() : 'NORMAL'
-                });
+                parsedImportItems.push({ cat: cols[0].trim().toUpperCase(), score: parseInt(cols[1])||10, q: cols[2].trim(), a: cols[3].trim(), sp: cols[4] ? cols[4].trim().toUpperCase() : 'NORMAL' });
             }
         });
 
@@ -649,11 +852,10 @@
         goAdmin('bank');
     }
 
+    // ==========================================
     // GAME ENGINE
-    function initSetup() {
-        populateQuizSelects();
-        changeTeamCount(0);
-    }
+    // ==========================================
+    function initSetup() { populateQuizSelects(); changeTeamCount(0); }
 
     function changeTeamCount(delta) {
         let n = state.setup.teamCount + delta;
@@ -667,8 +869,7 @@
                     <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm focus-within:border-indigo-400 transition-colors">
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Tim ${i+1}</label>
                         <input type="text" id="team-name-${i}" value="Tim ${String.fromCharCode(65+i)}" class="w-full font-black text-slate-700 bg-transparent outline-none">
-                    </div>
-                `;
+                    </div>`;
             }
         }
     }
@@ -688,25 +889,12 @@
         const qList = [];
         qSnap.forEach(doc => qList.push({ id: doc.id, ...doc.data(), status: 'AVAILABLE' }));
 
-        state.game = {
-            sessionId: 'GAME-' + Date.now(),
-            activeTeamId: teams[0].id,
-            teams: teams,
-            boardData: formatBoardData(qList),
-            q: null
-        };
+        state.game = { sessionId: 'GAME-' + Date.now(), activeTeamId: teams[0].id, teams: teams, boardData: formatBoardData(qList), q: null };
 
         const quizDoc = await db.collection('quizzes').doc(quizId).get();
-        await db.collection('game_sessions').add({
-            userId: state.user.licenseId,
-            quizName: quizDoc.exists ? quizDoc.data().name : 'Paket Kuis',
-            teamsCount: teams.length,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        await db.collection('game_sessions').add({ userId: state.user.licenseId, quizName: quizDoc.exists ? quizDoc.data().name : 'Paket Kuis', teamsCount: teams.length, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
 
-        buildBoard();
-        buildScoreboard();
-        showScreen('screen-board');
+        buildBoard(); buildScoreboard(); showScreen('screen-board');
     }
 
     function formatBoardData(qList) {
@@ -817,29 +1005,23 @@
         document.getElementById('q-phase-finished').classList.remove('hidden');
         document.getElementById('q-ans-box').classList.remove('hidden');
 
-        // Shift turn
         const currentIdx = state.game.teams.findIndex(t => t.id === state.game.activeTeamId);
         state.game.activeTeamId = state.game.teams[(currentIdx + 1) % state.game.teams.length].id;
     }
 
-    function toggleAnswerReveal() {
-        document.getElementById('q-ans-box').classList.toggle('hidden');
-    }
+    function toggleAnswerReveal() { document.getElementById('q-ans-box').classList.toggle('hidden'); }
 
     function finishGame() {
         const sorted = [...state.game.teams].sort((a,b) => b.score - a.score);
         const podium = document.getElementById('podium-list');
         podium.innerHTML = '';
-
         sorted.forEach((t, i) => {
             podium.innerHTML += `
                 <div class="flex justify-between items-center p-5 bg-white border border-slate-100 rounded-2xl shadow-sm mb-3">
                     <span class="font-black text-xl ${i===0?'text-amber-500':'text-slate-600'}">#${i+1} ${t.name}</span>
                     <span class="font-black text-xl text-indigo-600">${t.score} PTS</span>
-                </div>
-            `;
+                </div>`;
         });
-
         showScreen('screen-result');
     }
 </script>
