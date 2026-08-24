@@ -17,7 +17,7 @@
         :root { --bg-main: #f8fafc; --accent: #6366f1; }
         body { font-family: 'Nunito', sans-serif; background-color: var(--bg-main); color: #334155; margin: 0; overflow-x: hidden; user-select: none; }
         
-        .app-screen { display: none; width: 100vw; min-height: 100dvh; flex-direction: column; }
+       .app-screen { display: none; width: 100vw; min-height: 100vh; min-height: 100dvh; flex-direction: column; }
         .app-screen.active { display: flex; }
         
         .bg-pastel-gradient { background: radial-gradient(circle at top right, #fdf4ff 0%, #e0e7ff 50%, #f0fdf4 100%); }
@@ -722,21 +722,51 @@
         }
     }
 
-    async function startGameSession() {
-        const quizId = document.getElementById('sg-quiz').value;
-        if(!quizId) { showToast("Pilih Paket Kuis!", "error"); return; }
-        const teams = [];
-        for(let i=0; i<state.setup.teamCount; i++) { teams.push({ id: 'TM-'+i, name: document.getElementById(`team-name-${i}`).value.trim() || `Tim ${i+1}`, score: 0 }); }
+async function startGameSession() {
+        const btn = document.getElementById('btn-start-game');
+        if(btn) { btn.innerText = "MENYIAPKAN STUDIO..."; btn.disabled = true; }
         
-        const qSnap = await db.collection('questions').where('quizId', '==', quizId).get();
-        if(qSnap.empty) { showToast("Paket ini tidak memiliki soal!", "error"); return; }
-        const qList = []; qSnap.forEach(doc => qList.push({ id: doc.id, ...doc.data(), status: 'AVAILABLE' }));
+        try {
+            const quizId = document.getElementById('sg-quiz').value;
+            if(!quizId) { showToast("Pilih Paket Kuis!", "error"); if(btn){btn.innerText="MULAI GAME SEKARANG"; btn.disabled=false;} return; }
+            
+            const teams = [];
+            for(let i=0; i<state.setup.teamCount; i++) { 
+                const tNameEl = document.getElementById(`team-name-${i}`);
+                const tName = (tNameEl ? tNameEl.value.trim() : '') || `Tim ${i+1}`;
+                teams.push({ id: 'TM-'+i, name: tName, score: 0 }); 
+            }
+            
+            const qSnap = await db.collection('questions').where('quizId', '==', quizId).get();
+            if(qSnap.empty) { showToast("Paket ini tidak memiliki soal!", "error"); if(btn){btn.innerText="MULAI GAME SEKARANG"; btn.disabled=false;} return; }
+            
+            const qList = []; 
+            qSnap.forEach(doc => qList.push({ id: doc.id, ...doc.data(), status: 'AVAILABLE' }));
 
-        state.game = { sessionId: 'GAME-' + Date.now(), activeTeamId: teams[0].id, teams: teams, boardData: formatBoardData(qList), q: null };
-        const quizDoc = await db.collection('quizzes').doc(quizId).get();
-        await db.collection('game_sessions').add({ userId: state.user.licenseId, quizName: quizDoc.exists ? quizDoc.data().name : 'Paket Kuis', teamsCount: teams.length, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            state.game = { sessionId: 'GAME-' + Date.now(), activeTeamId: teams[0].id, teams: teams, boardData: formatBoardData(qList), q: null };
+            
+            // PENGAMAN 1: Cegah layar putih jika Firebase menolak mencatat riwayat
+            try {
+                const quizDoc = await db.collection('quizzes').doc(quizId).get();
+                await db.collection('game_sessions').add({ 
+                    userId: state.user.licenseId, 
+                    quizName: quizDoc.exists ? quizDoc.data().name : 'Paket Kuis', 
+                    teamsCount: teams.length, 
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+                });
+            } catch (historyErr) {
+                console.warn("Pencatatan riwayat sesi ditolak, tapi game dilanjutkan:", historyErr);
+            }
 
-        buildBoard(); buildScoreboard(); showScreen('screen-board');
+            buildBoard(); 
+            buildScoreboard(); 
+            showScreen('screen-board');
+        } catch (err) {
+            console.error("Kesalahan Start Game:", err);
+            alert("⚠️ Gagal memulai game:\n" + err.message);
+        }
+        
+        if(btn) { btn.innerText = "MULAI GAME SEKARANG"; btn.disabled = false; }
     }
 
     function formatBoardData(qList) {
