@@ -490,6 +490,8 @@
         win: new Audio('https://assets.mixkit.co/active_storage/sfx/518/518-preview.mp3')
         bgm: new Audio('bgm.mp3')
     };
+    sounds.bgm.loop = true; 
+    sounds.bgm.volume = 0.3;
     function playSound(type) { try { sounds[type].currentTime = 0; sounds[type].play().catch(e=>console.log("Audio prevented:", e)); } catch(e){} }
 
     // ==========================================
@@ -898,6 +900,7 @@
 
             buildBoard(); 
             buildScoreboard(); 
+            playSound('bgm');
             showScreen('screen-board');
         } catch (err) {
             console.error("Kesalahan Start Game:", err);
@@ -1073,6 +1076,7 @@
     }
 
     function forceFinishGame() {
+        sounds.bgm.pause();
         playSound('win');
         const duration = 5 * 1000; const animationEnd = Date.now() + duration; const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 200 };
         function randomInRange(min, max) { return Math.random() * (max - min) + min; }
