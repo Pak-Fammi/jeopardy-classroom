@@ -8,16 +8,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
+    <!-- Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         :root { --bg-main: #f8fafc; --accent: #6366f1; }
         body { font-family: 'Nunito', sans-serif; background-color: var(--bg-main); color: #334155; margin: 0; overflow-x: hidden; user-select: none; }
         
-       .app-screen { display: none; width: 100vw; min-height: 100vh; min-height: 100dvh; flex-direction: column; }
+        /* Pengaman Layar Putih (min-height: 100vh) */
+        .app-screen { display: none; width: 100vw; min-height: 100vh; min-height: 100dvh; flex-direction: column; }
         .app-screen.active { display: flex; }
         
         .bg-pastel-gradient { background: radial-gradient(circle at top right, #fdf4ff 0%, #e0e7ff 50%, #f0fdf4 100%); }
@@ -31,7 +34,7 @@
         .admin-nav-item:hover { background: #f8fafc; color: #475569; }
         .admin-nav-item.active { background: #e0e7ff; color: #4f46e5; box-shadow: 0 4px 14px -4px rgba(79, 70, 229, 0.2); }
         
-        /* Game Board */
+        /* Game Board Jeopardy Asli */
         .cat-header { background: linear-gradient(135deg, #fde047 0%, #fcd34d 100%); color: #78350f; font-weight: 900; font-size: clamp(14px, 1.5vw, 18px); min-height: 60px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 4px; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .jeopardy-grid { display: grid; gap: 0.75rem; width: 100%; grid-template-columns: repeat(var(--cat-count, 5), minmax(0, 1fr)); }
         .team-active { border-color: #60a5fa !important; box-shadow: 0 0 25px rgba(96, 165, 250, 0.4); transform: scale(1.05); background: #eff6ff !important; z-index: 10; }
@@ -53,6 +56,7 @@
 
 <div id="toast-container" class="fixed top-5 right-5 z-[200] flex flex-col gap-3 pointer-events-none"></div>
 
+<!-- 1. COVER SCREEN JEOPARDY -->
 <main id="screen-cover" class="app-screen active items-center justify-center bg-pastel-gradient relative overflow-hidden">
     <div class="z-10 text-center px-4 flex flex-col items-center w-full max-w-3xl mx-auto">
         <div class="glass-card p-14 rounded-[3rem] w-full flex flex-col items-center">
@@ -64,6 +68,7 @@
     </div>
 </main>
 
+<!-- 2. LOGIN MODAL -->
 <main id="modal-login" class="app-screen items-center justify-center bg-pastel-gradient p-4">
     <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md p-10 relative anim-bounce text-center border border-slate-100">
         <button onclick="playSound('click'); showScreen('screen-cover')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 font-bold text-2xl w-10 h-10 rounded-full flex items-center justify-center bg-slate-50 hover:bg-slate-100 transition-colors">&times;</button>
@@ -75,7 +80,9 @@
     </div>
 </main>
 
+<!-- 3. ADMIN LAYOUT -->
 <main id="screen-admin" class="app-screen bg-slate-50 flex-row">
+    <!-- Sidebar -->
     <aside class="w-72 bg-white border-r border-slate-100 hidden md:flex flex-col p-6 shrink-0 z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
         <div class="text-indigo-600 font-black text-3xl mb-8 flex items-center gap-3 tracking-tight">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -122,6 +129,7 @@
 
     <div class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50/50">
         
+        <!-- Sub: Dashboard -->
         <div id="admin-sub-dash" class="flex-1 flex flex-col overflow-y-auto p-6 md:p-10">
             <h1 class="text-3xl md:text-4xl font-black text-slate-800 mb-2">Dashboard</h1>
             <p class="text-slate-500 font-semibold mb-10">Pantau aktivitas permainan Jeopardy kelas Anda.</p>
@@ -129,24 +137,15 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5 cursor-pointer hover:shadow-md" onclick="goAdmin('quiz')">
                     <div class="text-4xl bg-indigo-50 w-16 h-16 rounded-2xl flex items-center justify-center text-indigo-600"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg></div>
-                    <div>
-                        <div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Paket Soal</div>
-                        <div class="text-slate-800 font-black text-3xl" id="dash-count-qz">0</div>
-                    </div>
+                    <div><div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Paket Soal</div><div class="text-slate-800 font-black text-3xl" id="dash-count-qz">0</div></div>
                 </div>
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5 cursor-pointer hover:shadow-md" onclick="goAdmin('bank')">
                     <div class="text-4xl bg-teal-50 w-16 h-16 rounded-2xl flex items-center justify-center text-teal-600"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg></div>
-                    <div>
-                        <div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Total Soal</div>
-                        <div class="text-slate-800 font-black text-3xl" id="dash-count-qs">0</div>
-                    </div>
+                    <div><div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Total Soal</div><div class="text-slate-800 font-black text-3xl" id="dash-count-qs">0</div></div>
                 </div>
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5 hover:shadow-md">
                     <div class="text-4xl bg-purple-50 w-16 h-16 rounded-2xl flex items-center justify-center text-purple-600"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg></div>
-                    <div>
-                        <div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Sesi Dimainkan</div>
-                        <div class="text-slate-800 font-black text-3xl" id="dash-count-gm">0</div>
-                    </div>
+                    <div><div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Sesi Dimainkan</div><div class="text-slate-800 font-black text-3xl" id="dash-count-gm">0</div></div>
                 </div>
             </div>
 
@@ -156,6 +155,7 @@
             </div>
         </div>
 
+        <!-- Sub: Kelola Kelas -->
         <div id="admin-sub-class" class="hidden flex-1 flex-col overflow-hidden p-6 md:p-10">
             <div class="flex justify-between items-center mb-8 shrink-0 flex-wrap gap-4">
                 <div><h2 class="text-3xl font-black text-slate-800 mb-1">🏫 Kelola Kelas</h2><p class="text-slate-500 font-semibold">Data kelas dari berbagai jenjang.</p></div>
@@ -170,6 +170,7 @@
             <div id="class-list-container" class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start pb-10"></div>
         </div>
 
+        <!-- Sub: Kelola Mapel -->
         <div id="admin-sub-subject" class="hidden flex-1 flex-col overflow-hidden p-6 md:p-10">
             <div class="flex justify-between items-center mb-8 shrink-0 flex-wrap gap-4">
                 <div><h2 class="text-3xl font-black text-slate-800 mb-1">📖 Kelola Mapel</h2><p class="text-slate-500 font-semibold">Manajemen data mata pelajaran per kelas.</p></div>
@@ -178,6 +179,7 @@
             <div id="subject-list-container" class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start pb-10"></div>
         </div>
 
+        <!-- Sub: Paket Soal -->
         <div id="admin-sub-quiz" class="hidden flex-1 flex-col overflow-hidden p-6 md:p-10">
             <div class="flex justify-between items-center mb-8 shrink-0 flex-wrap gap-4">
                 <div><h2 class="text-3xl font-black text-slate-800 mb-1">📦 Paket Soal</h2><p class="text-slate-500 font-semibold">Kelola kumpulan kuis Anda.</p></div>
@@ -186,6 +188,7 @@
             <div id="quiz-list-container" class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-5 content-start pb-10"></div>
         </div>
 
+        <!-- Sub: Tambah Soal -->
         <div id="admin-sub-bank" class="hidden flex-1 flex-col overflow-hidden p-6 md:p-10">
             <div class="flex justify-between items-center mb-8 shrink-0 flex-wrap gap-4">
                 <div><h2 class="text-3xl font-black text-slate-800 mb-1">✏️ Bank Soal</h2><p class="text-slate-500 font-semibold">Kelola basis data pertanyaan Jeopardy.</p></div>
@@ -204,6 +207,7 @@
             </div>
         </div>
 
+        <!-- Sub: Import Soal -->
         <div id="admin-sub-import" class="hidden flex-1 flex-col overflow-hidden p-6 md:p-10">
             <h2 class="text-3xl font-black text-slate-800 mb-2">📥 Import Soal (AI / Excel)</h2>
             <p class="text-slate-500 font-semibold mb-8">Masukkan puluhan soal sekaligus menggunakan hasil Copy-Paste.</p>
@@ -233,6 +237,8 @@
     </div>
 </main>
 
+<!-- MODALS UNTUK ADMIN -->
+<!-- Modal Add Class -->
 <div id="modal-add-class" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
     <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 relative border border-slate-100 mx-auto">
         <button onclick="playSound('click'); closeModal('modal-add-class')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl">&times;</button>
@@ -247,6 +253,7 @@
     </div>
 </div>
 
+<!-- Modal Add Subject -->
 <div id="modal-add-subject" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
     <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 relative border border-slate-100 mx-auto">
         <button onclick="playSound('click'); closeModal('modal-add-subject')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl">&times;</button>
@@ -260,6 +267,7 @@
     </div>
 </div>
 
+<!-- Modal Create Quiz -->
 <div id="modal-create-quiz" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
     <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg p-8 relative border border-slate-100 mx-auto">
         <button onclick="playSound('click'); closeModal('modal-create-quiz')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl">&times;</button>
@@ -276,6 +284,7 @@
     </div>
 </div>
 
+<!-- Modal Edit Question -->
 <div id="modal-edit-question" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
     <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl p-8 relative flex flex-col max-h-[90vh] border border-slate-100 mx-auto">
         <button onclick="playSound('click'); closeModal('modal-edit-question')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl">&times;</button>
@@ -323,6 +332,7 @@
     </div>
 </div>
 
+<!-- Modal Kicked (Session Security) -->
 <div id="modal-kicked" class="fixed inset-0 z-[999] hidden flex-col items-center justify-center bg-slate-900/95 backdrop-blur-md p-4">
     <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg p-10 flex flex-col items-center text-center transform scale-bounce">
         <div class="text-7xl mb-6">🚫</div>
@@ -332,6 +342,121 @@
     </div>
 </div>
 
+<!-- 4. SETUP GAME SCREEN (JEOPARDY) -->
+<main id="screen-setup" class="app-screen bg-pastel-gradient p-4 md:p-10 text-slate-800 overflow-y-auto">
+    <div class="max-w-3xl mx-auto w-full">
+        <div class="flex justify-between items-center mb-8 glass-card p-5 rounded-[2rem]">
+            <h1 class="text-2xl font-black text-indigo-800 pl-2">🕹️ SETUP PERMAINAN</h1>
+            <button onclick="playSound('click'); goAdmin('dash')" class="btn bg-white hover:bg-slate-50 text-slate-600 font-bold px-5 py-2.5 rounded-xl text-sm border border-slate-100 shadow-sm">◀ Batal</button>
+        </div>
+
+        <div class="bg-white rounded-[2rem] p-8 mb-6 shadow-sm border border-slate-100">
+            <h2 class="font-bold text-slate-500 text-sm tracking-wide uppercase mb-4">1. Filter & Pilih Paket Kuis</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                <select id="sg-filter-jenjang" onchange="onFilterJenjangChange('sg')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Jenjang</option><option value="SD">SD</option><option value="SMP">SMP</option><option value="SMA">SMA</option><option value="Umum">Umum</option></select>
+                <select id="sg-filter-class" onchange="onFilterClassChange('sg')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Kelas</option></select>
+                <select id="sg-filter-subject" onchange="applyQuizFilter('sg')" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 p-3 rounded-xl outline-none font-bold text-slate-600 transition-colors"><option value="">Semua Mapel</option></select>
+            </div>
+            <select id="sg-quiz" class="w-full bg-indigo-50 border border-indigo-200 focus:border-indigo-400 p-4 rounded-xl outline-none font-black text-indigo-700 text-xl transition-colors"><option value="">-- Pilih Paket Kuis --</option></select>
+        </div>
+
+        <div class="bg-white rounded-[2rem] p-8 mb-10 shadow-sm border border-slate-100">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-bold text-slate-500 text-sm tracking-wide uppercase">2. Pengaturan Tim</h2>
+                <div class="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
+                    <button onclick="playSound('click'); changeTeamCount(-1)" class="w-10 h-10 rounded-lg bg-white shadow-sm font-black text-slate-600 hover:text-indigo-600">-</button>
+                    <span id="txt-team-count" class="w-10 text-center font-black text-lg">4</span>
+                    <button onclick="playSound('click'); changeTeamCount(1)" class="w-10 h-10 rounded-lg bg-white shadow-sm font-black text-slate-600 hover:text-indigo-600">+</button>
+                </div>
+            </div>
+            <div id="team-inputs-container" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        </div>
+
+        <button id="btn-start-game" onclick="playSound('click'); startGameSession()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold py-5 rounded-2xl shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:shadow-[0_10px_40px_rgba(79,70,229,0.4)] transition-all">MULAI GAME SEKARANG</button>
+    </div>
+</main>
+
+<!-- 5. GAME BOARD SCREEN JEOPARDY -->
+<main id="screen-board" class="app-screen bg-[#f8fafc] p-2 md:p-4 h-[100dvh] flex-col overflow-hidden">
+    <div class="flex justify-between items-center bg-white p-3 rounded-2xl mb-3 shadow-sm border border-slate-100 shrink-0 gap-2">
+        <div class="flex items-center gap-3">
+            <div class="bg-indigo-50 px-6 py-2 rounded-xl flex flex-col items-center justify-center min-w-[180px]">
+                <span class="text-[10px] text-indigo-400 font-bold uppercase mb-0.5">🎯 GILIRAN MEMILIH</span>
+                <span id="header-active-team" class="text-indigo-900 font-black text-xl truncate">TIM</span>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+            <button onclick="playSound('click'); forceFinishGame()" class="btn bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-5 py-3 rounded-xl text-xs transition-colors">🏁 AKHIRI PAKSA</button>
+        </div>
+    </div>
+
+    <div class="flex-1 bg-white rounded-[2rem] border border-slate-100 p-3 md:p-6 shadow-sm flex flex-col justify-center overflow-auto min-h-0 relative">
+        <div id="jeopardy-grid" class="jeopardy-grid w-full h-full pb-2"></div>
+    </div>
+    
+    <div id="board-teams" class="mt-3 grid gap-3 shrink-0" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));"></div>
+</main>
+
+<!-- Modal Edit Skor Tim (Manual Override) -->
+<div id="modal-edit-score" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay p-4">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 relative border border-slate-100 mx-auto">
+        <button onclick="playSound('click'); closeModal('modal-edit-score')" class="absolute top-4 right-4 bg-slate-50 hover:bg-slate-100 w-10 h-10 rounded-full text-slate-400 font-black text-xl transition-colors">&times;</button>
+        <h2 class="text-2xl font-black text-slate-800 mb-2">✏️ Edit Skor Manual</h2>
+        <p id="es-team-name" class="text-slate-500 font-bold mb-6">Nama Tim</p>
+        <input type="hidden" id="es-team-id">
+        <input type="number" id="es-score-val" class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-800 text-center text-4xl font-black p-4 rounded-xl outline-none mb-6 transition-colors">
+        <button onclick="playSound('click'); saveTeamScore()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-md transition-all">SIMPAN SKOR</button>
+    </div>
+</div>
+
+<!-- Modal Soal Pop-up Jeopardy -->
+<div id="modal-question" class="fixed inset-0 z-40 hidden flex items-center justify-center modal-overlay p-4">
+    <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-5xl w-full flex flex-col min-h-[60vh] max-h-[95vh] overflow-hidden relative mx-auto">
+        
+        <div id="q-special-banner" class="hidden bg-gradient-to-r from-orange-400 to-amber-400 text-white font-black text-center py-2 uppercase tracking-widest text-sm animate-pulse shadow-sm">🔥 KARTU SPESIAL 🔥</div>
+        
+        <div class="flex justify-between items-center bg-slate-50 p-6 border-b border-slate-100">
+            <div id="q-modal-category" class="text-slate-600 font-black text-xl uppercase tracking-wider bg-white px-5 py-2 rounded-xl shadow-sm border border-slate-100">KATEGORI</div>
+            <div id="q-modal-score" class="text-xl font-black text-indigo-600 bg-indigo-50 px-5 py-2 rounded-xl">10 PTS</div>
+        </div>
+
+        <div class="flex-1 w-full overflow-y-auto p-6 md:p-12 bg-white flex flex-col items-center justify-center relative">
+            <h2 id="q-modal-text" class="text-slate-800 font-black text-center text-3xl md:text-4xl leading-relaxed">Pertanyaan?</h2>
+            
+            <div id="q-ans-box" class="hidden flex-col items-center w-full max-w-4xl bg-teal-50 p-8 rounded-[2rem] mt-10 shadow-inner">
+                <div class="text-teal-600 font-bold text-sm uppercase tracking-widest mb-2">JAWABAN BENAR</div>
+                <h2 id="q-modal-answer" class="text-teal-900 font-black text-center text-3xl">Jawaban</h2>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 p-6 border-t border-slate-100 flex flex-col gap-5">
+            <div id="q-phase-select" class="w-full flex flex-col items-center">
+                <div class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-4">🔔 Tim Mana Yang Menjawab?</div>
+                <div id="q-buzzer-container" class="flex flex-wrap justify-center gap-3 w-full max-w-3xl"></div>
+            </div>
+
+            <div id="q-phase-validate" class="hidden w-full flex-col items-center bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 max-w-3xl mx-auto">
+                <div id="q-answering-team" class="text-2xl font-black text-slate-800 mb-6">TIM</div>
+                <div class="flex w-full gap-4">
+                    <button onclick="processAnswer(false)" class="btn flex-1 py-4 bg-rose-50 hover:bg-rose-100 text-rose-600 font-black text-xl rounded-xl transition-colors">❌ SALAH</button>
+                    <button onclick="processAnswer(true)" class="btn flex-1 py-4 bg-teal-500 hover:bg-teal-600 text-white font-black text-xl rounded-xl shadow-md transition-all">✅ BENAR</button>
+                </div>
+            </div>
+
+            <div id="q-phase-finished" class="hidden flex-col items-center w-full">
+                <button onclick="playSound('click'); returnToBoard()" class="btn px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-lg shadow-md transition-all">KEMBALI KE PAPAN GRID</button>
+            </div>
+            
+            <div class="flex justify-between w-full mt-2">
+                <button onclick="playSound('click'); closeAndDiscardQuestion()" class="btn text-rose-300 hover:text-rose-500 text-xs font-bold transition-colors">Lewati & Hanguskan Soal</button>
+                <button onclick="playSound('click'); toggleAnswerReveal()" id="btn-toggle-ans" class="btn text-slate-400 hover:text-slate-600 text-sm font-bold transition-colors">👀 Tampilkan Jawaban</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Efek Layar Penuh Zonk/Bonus -->
 <div id="modal-special-effect" class="fixed inset-0 z-[60] hidden flex-col items-center justify-center bg-slate-900/90 backdrop-blur-sm">
     <div id="se-content" class="flex flex-col items-center transform scale-0 transition-transform duration-500">
         <div id="se-icon" class="text-9xl mb-4">💣</div>
@@ -341,6 +466,16 @@
         </div>
     </div>
 </div>
+
+<!-- SCREEN RESULT (Podium) -->
+<main id="screen-result" class="app-screen bg-pastel-gradient items-center justify-center p-6 text-center">
+    <div class="glass-card p-10 rounded-[3rem] w-full max-w-2xl flex flex-col items-center">
+        <div class="text-7xl mb-4 anim-bounce drop-shadow-md">🏆</div>
+        <h1 class="text-4xl font-black text-indigo-800 mb-8 tracking-wide">HASIL AKHIR</h1>
+        <div id="podium-list" class="w-full flex flex-col gap-3 mb-10 overflow-hidden px-2 py-4"></div>
+        <button onclick="playSound('click'); showScreen('screen-admin'); goAdmin('dash');" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-4 px-10 rounded-xl shadow-[0_8px_30px_rgba(79,70,229,0.3)] transition-all">🏠 KEMBALI KE DASHBOARD</button>
+    </div>
+</main>
 
 <script>
     // ==========================================
@@ -477,7 +612,7 @@
     }
 
     // ==========================================
-    // MENU CRUD & FILTER CASCADING
+    // MENU CRUD & FILTER KASKADE
     // ==========================================
     function onFilterJenjangChange(prefix) {
         const j = document.getElementById(`${prefix}-filter-jenjang`).value;
@@ -652,9 +787,8 @@
     function editQuestion(id) {
         const q = state.loadedQuestions[id]; if(!q) return;
         document.getElementById('eq-id').value = id;
-        document.getElementById('eq-quiz').value = q.quizId;
         
-        // Auto-select filter saat edit agar rapi
+        // Auto-select filter agar rapi
         const paket = state.quizzes.find(x => x.id === q.quizId);
         if(paket) {
             document.getElementById('eq-filter-jenjang').value = paket.jenjang || ''; onFilterJenjangChange('eq');
@@ -708,7 +842,7 @@
     }
 
     // ==========================================
-    // GAME ENGINE & EDIT SKOR MANUAL
+    // GAME ENGINE & EDIT SKOR MANUAL JEOPARDY
     // ==========================================
     function initSetup() { populateQuizSelects(); changeTeamCount(0); }
     function changeTeamCount(delta) {
@@ -722,9 +856,9 @@
         }
     }
 
-async function startGameSession() {
+    async function startGameSession() {
         const btn = document.getElementById('btn-start-game');
-        if(btn) { btn.innerText = "MENYIAPKAN STUDIO..."; btn.disabled = true; }
+        if(btn) { btn.innerText = "MENYIAPKAN PAPAN..."; btn.disabled = true; }
         
         try {
             const quizId = document.getElementById('sg-quiz').value;
@@ -745,7 +879,7 @@ async function startGameSession() {
 
             state.game = { sessionId: 'GAME-' + Date.now(), activeTeamId: teams[0].id, teams: teams, boardData: formatBoardData(qList), q: null };
             
-            // PENGAMAN 1: Cegah layar putih jika Firebase menolak mencatat riwayat
+            // Pengaman: Catat history ke firebase tapi jangan block jika gagal
             try {
                 const quizDoc = await db.collection('quizzes').doc(quizId).get();
                 await db.collection('game_sessions').add({ 
@@ -754,8 +888,11 @@ async function startGameSession() {
                     teamsCount: teams.length, 
                     createdAt: firebase.firestore.FieldValue.serverTimestamp() 
                 });
-            } catch (historyErr) {
-                console.warn("Pencatatan riwayat sesi ditolak, tapi game dilanjutkan:", historyErr);
+            } catch (historyErr) { console.warn("Pencatatan riwayat sesi gagal:", historyErr); }
+
+            // Cek elemen DOM agar tidak blank putih
+            if (!document.getElementById('jeopardy-grid')) {
+                throw new Error("Elemen papan tidak ditemukan!");
             }
 
             buildBoard(); 
@@ -834,12 +971,8 @@ async function startGameSession() {
         const teamId = document.getElementById('es-team-id').value;
         const newScore = parseInt(document.getElementById('es-score-val').value) || 0;
         const team = state.game.teams.find(t => t.id === teamId);
-        if(team) {
-            team.score = newScore;
-            showToast(`Skor ${team.name} diperbarui secara manual.`, 'success');
-        }
-        closeModal('modal-edit-score');
-        buildScoreboard(); 
+        if(team) { team.score = newScore; showToast(`Skor ${team.name} diperbarui manual.`, 'success'); }
+        closeModal('modal-edit-score'); buildScoreboard(); 
     }
 
     function openQuestion(catName, qIndex) {
@@ -917,7 +1050,6 @@ async function startGameSession() {
             if(qData.sp === 'BONUS_X2') { points *= 2; playSound('bonus'); msg = " (BONUS X2!)"; }
             else if(qData.sp === 'BONUS_X5') { points *= 5; playSound('bonus'); msg = " (MEGA BONUS X5!)"; }
             else { playSound('correct'); }
-            
             team.score += points; qData.status = 'USED'; showToast(`✅ ${team.name} Benar +${points} PTS!${msg}`, 'success');
         } else {
             team.score -= points; playSound('wrong'); showToast(`❌ ${team.name} Salah -${points} PTS!`, 'error');
@@ -925,7 +1057,6 @@ async function startGameSession() {
 
         document.getElementById(`score-${team.id}`).innerText = team.score;
         document.getElementById('q-phase-validate').classList.add('hidden'); document.getElementById('q-phase-finished').classList.remove('hidden'); document.getElementById('q-ans-box').classList.remove('hidden');
-
         const currentIdx = state.game.teams.findIndex(t => t.id === state.game.activeTeamId);
         state.game.activeTeamId = state.game.teams[(currentIdx + 1) % state.game.teams.length].id;
     }
